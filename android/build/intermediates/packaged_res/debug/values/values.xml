@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_background_color">#F5A623FF</color>
+    <color name="ic_launcher_background">#ece4e4</color>
     <string name="app_name">color-sort</string>
     <style name="GdxTheme" parent="android:Theme">
     <item name="android:windowBackground">@android:color/transparent</item>
