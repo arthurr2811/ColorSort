@@ -7,78 +7,62 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.Body
-import com.badlogic.gdx.physics.box2d.BodyDef
-import com.badlogic.gdx.physics.box2d.CircleShape
-import com.badlogic.gdx.physics.box2d.Fixture
-import com.badlogic.gdx.physics.box2d.FixtureDef
-import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
 
 /** [com.badlogic.gdx.ApplicationListener] implementation shared by all platforms. */
 class ColorSortMainGame : ApplicationAdapter() {
     private val batch by lazy { SpriteBatch() }
-    private val image by lazy { Texture("testBall.png") }
-    private val ground by lazy { Texture("ground.png") }
-    private val camera : OrthographicCamera = OrthographicCamera()
-    private lateinit var body : Body
-    private lateinit var world : World
+    // Game Objects textures
+    private val spawner by lazy { Texture("DispatcherLeft.png") }
+    private val dispatcherLeft by lazy { Texture("DispatcherLeft.png") }
+    private val dispatcherRight by lazy { Texture("DispatcherRight.png") }
+    private val obstacle by lazy { Texture("Obstacle.png") }
+    private val blueHopper by lazy { Texture("BlueHopper.png") }
+    private val greenHopper by lazy { Texture("GreenHopper.png") }
+    private val redHopper by lazy { Texture("RedHopper.png") }
+    private val blueBall by lazy { Texture("BlueBall.png") }
+    private val greenBall by lazy { Texture("GreenBall.png") }
+    private val redBall by lazy { Texture("RedBall.png") }
 
+    // Camera
+    private val camera : OrthographicCamera = OrthographicCamera()
+    // balls list with physics
+    private val ballsList : ArrayList<Ball> = ArrayList()
+    private lateinit var world : World
+    // ToDO: ball spawner, add other game objects classes same way as ball, render them,
+    //  collision = delete, spawner no need to have physics, but spawner.spawn() function
+    //  make both dispatcher triangels movable by player, add score, add menue and highscore
     override fun create() {
         // world
         world = World(Vector2(0f,-10f), true)
-        camera.setToOrtho(false, 400f, 800f)
         val screenX = 400f
         val screenY = 800f
+        camera.setToOrtho(false, screenX, screenY)
 
-        // ball
-        val bodyDef = BodyDef()
-        bodyDef.type = BodyDef.BodyType.DynamicBody
-        // start position top middle
-        val positionX = screenX / 2f
-        val positionY = screenY * 0.9f
-        bodyDef.position.set(positionX, positionY)
-        body = world.createBody(bodyDef)
-        val fixtureDef = FixtureDef()
-        val circle = CircleShape()
-        circle.radius = 6f
-        fixtureDef.shape = circle
-        fixtureDef.density = 0.5f
-        fixtureDef.friction = 0.1f
-        fixtureDef.restitution = 0.6f
-        circle.dispose()
-        val fixture : Fixture = body.createFixture(fixtureDef)
 
-        // ground bottom midddle
-        val groundBodyDef = BodyDef()
-        groundBodyDef.position.set(Vector2(0f,10f))
-        val groundBody = world.createBody(groundBodyDef)
-        val groundBox = PolygonShape()
-        groundBox.setAsBox(screenX / 2, screenY * 0.1f)
-        groundBody.createFixture(groundBox, 0.0f)
-        groundBox.dispose()
+        // create ball, add to balls list
+        val testBallGreen = Ball(GameColor.RANDOM, world, screenX/2, screenY-80)
+        ballsList.add(testBallGreen)
     }
     override fun render() {
-        //ball textur testweise mittig oben platzieren
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-
-        val x = body.position.x
-        var y = body.position.y
-        // ball löschen wenn auf boden aufkommt
-
-        if (body.position.y <= 100f){
-            world.destroyBody(body)
-            y = 1000f
+        // get current position of first ball in balls list and needed color for texture
+        val ball1TextureX = ballsList[0].getBallBody()!!.position.x
+        val ball1TextureY = ballsList[0].getBallBody()!!.position.y
+        var ball1Texture = greenBall
+        if (ballsList[0].getColor() == GameColor.RED){
+            ball1Texture = redBall
+        } else if (ballsList[0].getColor() == GameColor.BLUE){
+            ball1Texture = blueBall
         }
 
         camera.update()
         batch.projectionMatrix = camera.combined
         batch.begin()
-        if (y < 800){
-            batch.draw(image, x, y)
-        }
-        batch.draw(ground, 0f, 10f)
+        // draw corresponding texture on current position
+        batch.draw(ball1Texture, ball1TextureX, ball1TextureY)
+        batch.draw(greenHopper, 200f - 35f, 0f)
         batch.end()
 
         // physics 2D testing
@@ -86,8 +70,9 @@ class ColorSortMainGame : ApplicationAdapter() {
     }
 
     override fun dispose() {
+        greenBall.dispose()
+        greenHopper.dispose()
         batch.dispose()
-        image.dispose()
-        ground.dispose()
+
     }
 }
