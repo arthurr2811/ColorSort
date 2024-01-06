@@ -9,7 +9,7 @@ import ktx.box2d.body
 import ktx.box2d.circle
 import kotlin.random.Random
 
-class Ball (private var color : GameColor = GameColor.RANDOM, private val world: World, private val positionX : Float, private val positionY : Float) {
+class Ball (private var color : GameColor = GameColor.RANDOM, world: World, private val positionX : Float, private val positionY : Float) {
     private var ballBody : Body? = null
     private var ballFixture : Fixture? = null
 

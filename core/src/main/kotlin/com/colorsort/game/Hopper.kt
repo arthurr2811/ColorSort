@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.World
 import ktx.box2d.body
 import ktx.box2d.edge
 
-class Hopper(private var color : GameColor, private val world: World, private val positionX : Float, private val positionY : Float) {
+class Hopper(private var color : GameColor, world: World, private val positionX : Float, private val positionY : Float) {
     private var hopperBody : Body? = null
     private var hopperFixture : Fixture? = null
     // Textures
