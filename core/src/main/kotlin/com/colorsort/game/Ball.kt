@@ -17,11 +17,11 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, posi
         }
         // create physics2D body
         ballBody = world.body {
-            position.set(positionX, positionY)
+            position.set(positionX -20f, positionY- 20)
             type = BodyDef.BodyType.DynamicBody
-            circle(radius = 20f)
+            circle(radius = 40f)
             {disposeOfShape = true} }
-        ballFixture = ballBody!!.circle(radius = 20f){
+        ballFixture = ballBody!!.circle(radius = 40f){
             density = 0.5f
             friction = 0.4f
         }

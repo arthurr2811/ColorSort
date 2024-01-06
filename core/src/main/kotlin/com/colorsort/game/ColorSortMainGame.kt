@@ -28,6 +28,8 @@ class ColorSortMainGame : ApplicationAdapter() {
     private val camera : OrthographicCamera = OrthographicCamera()
     // balls list with physics
     private val ballsList : ArrayList<Ball> = ArrayList()
+    // hopper list with physics
+    private val hopperList : ArrayList<Hopper> = ArrayList()
     private lateinit var world : World
     // ToDO: ball spawner, add other game objects classes same way as ball, render them,
     //  collision = delete, spawner no need to have physics, but spawner.spawn() function
@@ -41,8 +43,15 @@ class ColorSortMainGame : ApplicationAdapter() {
 
 
         // create ball, add to balls list
-        val testBallGreen = Ball(GameColor.RANDOM, world, screenX/2, screenY-80)
+        val testBallGreen = Ball(GameColor.RANDOM, world, (screenX/2), screenY - 60)
         ballsList.add(testBallGreen)
+        // create hopper
+        val greenHopper = Hopper(GameColor.GREEN, world, screenX * 0.5f, 0f)
+        hopperList.add(greenHopper)
+        val blueHopper = Hopper(GameColor.RED, world, screenX * 0.2f, 0f)
+        hopperList.add(blueHopper)
+        val redHopper = Hopper(GameColor.BLUE, world, screenX * 0.8f, 0f)
+        hopperList.add(redHopper)
     }
     override fun render() {
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f)
@@ -56,13 +65,20 @@ class ColorSortMainGame : ApplicationAdapter() {
         } else if (ballsList[0].getColor() == GameColor.BLUE){
             ball1Texture = blueBall
         }
-
+        // get Hooper bodies
+        val greenHopperBody = hopperList[0].getHopperBody()
+        val blueHopperBody = hopperList[1].getHopperBody()
+        val redHopperBody = hopperList[2].getHopperBody()
+        println(greenHopperBody!!.position.x)
+        println(redHopperBody!!.position.x)
         camera.update()
         batch.projectionMatrix = camera.combined
         batch.begin()
         // draw corresponding texture on current position
         batch.draw(ball1Texture, ball1TextureX, ball1TextureY)
-        batch.draw(greenHopper, 200f - 35f, 0f)
+        batch.draw(greenHopper, greenHopperBody!!.position.x, greenHopperBody.position.y)
+        batch.draw(blueHopper, blueHopperBody!!.position.x, blueHopperBody.position.y)
+        batch.draw(redHopper, redHopperBody!!.position.x, redHopperBody.position.y)
         batch.end()
 
         // physics 2D testing
@@ -72,6 +88,8 @@ class ColorSortMainGame : ApplicationAdapter() {
     override fun dispose() {
         greenBall.dispose()
         greenHopper.dispose()
+        redHopper.dispose()
+        blueHopper.dispose()
         batch.dispose()
 
     }
