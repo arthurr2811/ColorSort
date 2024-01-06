@@ -1,6 +1,7 @@
 package com.colorsort.game
 
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.Fixture
@@ -22,14 +23,13 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
         }
         // create physics2D body
         ballBody = world.body {
-            position.set(positionX -20f, positionY- 20)
+            position.set(positionX, positionY)
             type = BodyDef.BodyType.DynamicBody
-            circle(radius = 20f)
-            {disposeOfShape = true} }
+        }
         ballFixture = ballBody!!.circle(radius = 20f){
             density = 0.5f
             friction = 0.4f
-            restitution = 0.1f
+            restitution = 0.2f
             disposeOfShape = true
         }
     }
@@ -44,11 +44,15 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
             GameColor.RANDOM -> null
         }
     }
-    fun getBallBody (): Body? {
+    private fun getBallBody (): Body? {
         return this.ballBody
     }
     fun getBallFixture() : Fixture? {
         return this.ballFixture
+    }
+    fun getTexturePosition(): Vector2 {
+        // postion is middle of ball, but texture start bottom right corner
+        return Vector2(ballBody!!.position.x - 20f, ballBody!!.position.y - 20f)
     }
     fun destroyBody(world: World){
         val bodyToDestroy = this.getBallBody()

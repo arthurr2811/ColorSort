@@ -37,12 +37,14 @@ class ColorSortMainGame : ApplicationAdapter() {
     private lateinit var dispatcherRight: Dispatcher
     private lateinit var dispatcherController: DispatcherController
     // borders
-    private lateinit var ground : Border
+    private lateinit var ground : Despawner
     private lateinit var leftBorder : Border
     private lateinit var rightBorder : Border
+    /*
+    ToDo: add score add highscore
+    Ideas for later: start screen, pause button and menue, adjustable gamerule (spawnspeed etc.)
+     */
 
-    // ToDo: add score, add menue add highscore
-    // ToDO: FIX POSITIONS OF ALL BODIES / FIXTURES
     override fun create() {
         // world
         world = World(Vector2(0f,-10f), true)
@@ -55,8 +57,8 @@ class ColorSortMainGame : ApplicationAdapter() {
         spawner = Spawner(screenX / 2, screenY - 60, 2f,world)
         // dispatcher
         dispatcherLeft = Dispatcher(world, 95f, screenY - 325f, DispatcherOrientation.LEFT)
-        dispatcherRight = Dispatcher(world, 235f, screenY - 325f, DispatcherOrientation.LEFT)
-        dispatcherController = DispatcherController(dispatcherLeft, dispatcherRight)
+        dispatcherRight = Dispatcher(world, 235f, screenY - 325f, DispatcherOrientation.RIGHT)
+        dispatcherController = DispatcherController(dispatcherLeft, dispatcherRight, 0.5f)
         Gdx.input.inputProcessor = GestureDetector(dispatcherController)
         // create hopper
         val greenHopper = Hopper(GameColor.GREEN, world, screenX * 0.5f, 0f)
@@ -66,9 +68,9 @@ class ColorSortMainGame : ApplicationAdapter() {
         val redHopper = Hopper(GameColor.BLUE, world, screenX * 0.8f, 0f)
         hopperList.add(redHopper)
         // ground
-        ground = Border(world, Vector2(0f, 0f), Vector2(400f, 0f))
-        leftBorder = Border(world, Vector2(0f, 0f), Vector2(0f, 600f))
-        rightBorder = Border(world, Vector2(400f, 0f), Vector2(400f, 600f))
+        ground = Despawner(world, Vector2(0f, 0f), Vector2(400f, 0f), Vector2(0f, 5f))
+        leftBorder = Border(world, 3f, 800f, Vector2(1.5f, 400f))
+        rightBorder = Border(world, 3f, 800f, Vector2(398.5f, 400f))
     }
 
     override fun render() {
@@ -86,17 +88,17 @@ class ColorSortMainGame : ApplicationAdapter() {
         batch.begin()
         // draw hoppers !only works with 3 hoppers because of spacing
         for (hopper in hopperList){
-            batch.draw(hopper.getTexture(), hopper.getHopperBody()!!.position.x, hopper.getHopperBody()!!.position.y)
+            batch.draw(hopper.getTexture(), hopper.getTexturePosition().x, hopper.getTexturePosition().y)
         }
         // draw dispatcher
-        batch.draw(dispatcherLeftTexture, dispatcherLeft.getDispatcherBody()!!.position.x, dispatcherLeft.getDispatcherBody()!!.position.y)
-        batch.draw(dispatcherRightTexture, dispatcherRight.getDispatcherBody()!!.position.x, dispatcherRight.getDispatcherBody()!!.position.y)
+        batch.draw(dispatcherLeftTexture, dispatcherLeft.getTexturePosition().x, dispatcherLeft.getTexturePosition().y)
+        batch.draw(dispatcherRightTexture, dispatcherRight.getTexturePosition().x, dispatcherRight.getTexturePosition().y)
         // draw balls
         for (ball in ballsList){
-            batch.draw(ball.getTexture(), ball.getBallBody()!!.position.x, ball.getBallBody()!!.position.y)
+            batch.draw(ball.getTexture(), ball.getTexturePosition().x, ball.getTexturePosition().y)
         }
         // draw spawner (after balls!)
-        batch.draw(spawner.spawnerTexture, spawner.getPosition().x, spawner.getPosition().y)
+        batch.draw(spawner.spawnerTexture, spawner.getTexturePosition().x, spawner.getTexturePosition().y)
         batch.end()
 
         // simulate physics

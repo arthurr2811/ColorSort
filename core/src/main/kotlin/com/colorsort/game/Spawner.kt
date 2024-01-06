@@ -15,7 +15,7 @@ class Spawner (private val spawnPointX : Float, private val spawnPointY : Float,
         }
         return Ball(realColor, world, spawnPointX, spawnPointY)
     }
-    fun getPosition () : Vector2 {
+    fun getTexturePosition () : Vector2 {
         return Vector2(spawnPointX - 35, spawnPointY - 20)
     }
 }

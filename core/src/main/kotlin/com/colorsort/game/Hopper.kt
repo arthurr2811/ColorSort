@@ -19,11 +19,8 @@ class Hopper(private var color : GameColor, world: World, private val positionX 
         // create body as a simple line reaching from top left to top right from hopper
         hopperBody = world.body {
             position.set(positionX - 35f, positionY)
-            edge(from = Vector2(0f, 0f), to = Vector2(70f, 0f)){
-                disposeOfShape = true
-            }
         }
-        hopperFixture = hopperBody!!.edge(from = Vector2(0f, 60f), to = Vector2(70f, 60f)){disposeOfShape = true}
+        hopperFixture = hopperBody!!.edge(from = Vector2(0f, 70f), to = Vector2(70f, 70f)){disposeOfShape = true}
     }
 
     fun getColor() : GameColor {
@@ -37,8 +34,11 @@ class Hopper(private var color : GameColor, world: World, private val positionX 
             GameColor.RANDOM -> null
         }
     }
-    fun getHopperBody (): Body? {
+    private fun getHopperBody (): Body? {
         return this.hopperBody
+    }
+    fun getTexturePosition() : Vector2 {
+        return Vector2(positionX -35, positionY)
     }
     fun getHopperFixture() : Fixture? {
         return this.hopperFixture
