@@ -49,5 +49,12 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
     fun getBallFixture() : Fixture? {
         return this.ballFixture
     }
-
+    fun destroyBody(world: World){
+        val bodyToDestroy = this.getBallBody()
+        this.ballBody = null
+        // make sure to not remove something that's null!
+        if (bodyToDestroy != null){
+            world.destroyBody(bodyToDestroy)
+        }
+    }
 }

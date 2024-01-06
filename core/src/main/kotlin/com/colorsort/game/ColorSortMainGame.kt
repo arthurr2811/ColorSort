@@ -24,21 +24,26 @@ class ColorSortMainGame : ApplicationAdapter() {
     private val camera : OrthographicCamera = OrthographicCamera()
     // balls list with physics
     private val ballsList : ArrayList<Ball> = ArrayList()
+    private val ballsToRemoveList : ArrayList <Ball> = ArrayList()
     private var lastSpawnTime : Long = 0
     // hopper list with physics
     private val hopperList : ArrayList<Hopper> = ArrayList()
     private lateinit var world : World
+    private lateinit var contactListener : ContactListener
     // spawner
     private lateinit var spawner : Spawner
-    // ToDO: ball spawner, add other game objects classes same way as ball, render them,
+    // ToDo: ball spawner, add other game objects classes same way as ball, render them,
     //  collision = delete, spawner no need to have physics, but spawner.spawn() function
     //  make both dispatcher triangels movable by player, add score, add menue and highscore
+    // ToDO: USE DISTANT JOINT FOR DISPATCHER
     override fun create() {
         // world
         world = World(Vector2(0f,-10f), true)
         val screenX = 400f
         val screenY = 800f
         camera.setToOrtho(false, screenX, screenY)
+        contactListener = ContactListener(world, ballsList, ballsToRemoveList)
+        world.setContactListener(ContactListener(world, ballsList, ballsToRemoveList))
         // spawner
         spawner = Spawner(screenX / 2, screenY - 60, 2f,world)
         // create hopper
@@ -75,8 +80,16 @@ class ColorSortMainGame : ApplicationAdapter() {
         batch.draw(spawner.spawnerTexture, spawner.getPosition().x, spawner.getPosition().y)
         batch.end()
 
-        // physics 2D testing
+        // simulate physics
         world.step(1/60f,6,2)
+        // remove to remove balls
+        processBallsForRemoval()
+    }
+    private fun processBallsForRemoval() {
+        for (ball in ballsToRemoveList){
+            ballsList.remove(ball)
+            ball.destroyBody(world)
+        }
     }
 
     override fun dispose() {
