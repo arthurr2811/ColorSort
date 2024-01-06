@@ -36,10 +36,13 @@ class ColorSortMainGame : ApplicationAdapter() {
     private lateinit var dispatcherLeft: Dispatcher
     private lateinit var dispatcherRight: Dispatcher
     private lateinit var dispatcherController: DispatcherController
-    // ToDo: ball spawner, add other game objects classes same way as ball, render them,
-    //  collision = delete, spawner no need to have physics, but spawner.spawn() function
-    //  make both dispatcher triangels movable by player, add score, add menue and highscore
-    // ToDO: USE DISTANT JOINT FOR DISPATCHER
+    // borders
+    private lateinit var ground : Border
+    private lateinit var leftBorder : Border
+    private lateinit var rightBorder : Border
+
+    // ToDo: add score, add menue add highscore
+    // ToDO: FIX POSITIONS OF ALL BODIES / FIXTURES
     override fun create() {
         // world
         world = World(Vector2(0f,-10f), true)
@@ -62,6 +65,10 @@ class ColorSortMainGame : ApplicationAdapter() {
         hopperList.add(blueHopper)
         val redHopper = Hopper(GameColor.BLUE, world, screenX * 0.8f, 0f)
         hopperList.add(redHopper)
+        // ground
+        ground = Border(world, Vector2(0f, 0f), Vector2(400f, 0f))
+        leftBorder = Border(world, Vector2(0f, 0f), Vector2(0f, 600f))
+        rightBorder = Border(world, Vector2(400f, 0f), Vector2(400f, 600f))
     }
 
     override fun render() {

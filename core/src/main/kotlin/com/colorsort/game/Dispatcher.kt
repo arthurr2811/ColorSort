@@ -11,7 +11,6 @@ class Dispatcher (world: World, private val positionX : Float, private val posit
     private var dispatcherBody : Body? = null
     private var dispatcherFixture : Fixture? = null
     init {
-        // ToDO Fix Dispatcher Fixture Position
         if (orientation == DispatcherOrientation.LEFT){
             dispatcherBody = world.body {
                 position.set(positionX, positionY)
