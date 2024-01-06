@@ -30,6 +30,7 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
             density = 0.5f
             friction = 0.4f
             restitution = 0.1f
+            disposeOfShape = true
         }
     }
     fun getColor() : GameColor {

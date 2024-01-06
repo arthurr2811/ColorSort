@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.TimeUtils
@@ -19,7 +20,6 @@ class ColorSortMainGame : ApplicationAdapter() {
     private val dispatcherRightTexture by lazy { Texture("DispatcherRight.png") }
     private val obstacleTexture by lazy { Texture("Obstacle.png") }
 
-
     // Camera
     private val camera : OrthographicCamera = OrthographicCamera()
     // balls list with physics
@@ -32,6 +32,10 @@ class ColorSortMainGame : ApplicationAdapter() {
     private lateinit var contactListener : ContactListener
     // spawner
     private lateinit var spawner : Spawner
+    // dispatcher
+    private lateinit var dispatcherLeft: Dispatcher
+    private lateinit var dispatcherRight: Dispatcher
+    private lateinit var dispatcherController: DispatcherController
     // ToDo: ball spawner, add other game objects classes same way as ball, render them,
     //  collision = delete, spawner no need to have physics, but spawner.spawn() function
     //  make both dispatcher triangels movable by player, add score, add menue and highscore
@@ -46,6 +50,11 @@ class ColorSortMainGame : ApplicationAdapter() {
         world.setContactListener(contactListener)
         // spawner
         spawner = Spawner(screenX / 2, screenY - 60, 2f,world)
+        // dispatcher
+        dispatcherLeft = Dispatcher(world, 95f, screenY - 325f, DispatcherOrientation.LEFT)
+        dispatcherRight = Dispatcher(world, 235f, screenY - 325f, DispatcherOrientation.LEFT)
+        dispatcherController = DispatcherController(dispatcherLeft, dispatcherRight)
+        Gdx.input.inputProcessor = GestureDetector(dispatcherController)
         // create hopper
         val greenHopper = Hopper(GameColor.GREEN, world, screenX * 0.5f, 0f)
         hopperList.add(greenHopper)
@@ -72,6 +81,9 @@ class ColorSortMainGame : ApplicationAdapter() {
         for (hopper in hopperList){
             batch.draw(hopper.getTexture(), hopper.getHopperBody()!!.position.x, hopper.getHopperBody()!!.position.y)
         }
+        // draw dispatcher
+        batch.draw(dispatcherLeftTexture, dispatcherLeft.getDispatcherBody()!!.position.x, dispatcherLeft.getDispatcherBody()!!.position.y)
+        batch.draw(dispatcherRightTexture, dispatcherRight.getDispatcherBody()!!.position.x, dispatcherRight.getDispatcherBody()!!.position.y)
         // draw balls
         for (ball in ballsList){
             batch.draw(ball.getTexture(), ball.getBallBody()!!.position.x, ball.getBallBody()!!.position.y)
@@ -101,6 +113,7 @@ class ColorSortMainGame : ApplicationAdapter() {
         }
         spawner.spawnerTexture.dispose()
         batch.dispose()
-
+        dispatcherRightTexture.dispose()
+        dispatcherLeftTexture.dispose()
     }
 }

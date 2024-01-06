@@ -23,7 +23,7 @@ class Hopper(private var color : GameColor, world: World, private val positionX 
                 disposeOfShape = true
             }
         }
-        hopperFixture = hopperBody!!.edge(from = Vector2(0f, 60f), to = Vector2(70f, 60f))
+        hopperFixture = hopperBody!!.edge(from = Vector2(0f, 60f), to = Vector2(70f, 60f)){disposeOfShape = true}
     }
 
     fun getColor() : GameColor {
