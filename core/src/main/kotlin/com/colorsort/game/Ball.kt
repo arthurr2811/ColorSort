@@ -1,5 +1,6 @@
 package com.colorsort.game
 
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.Fixture
@@ -8,9 +9,13 @@ import ktx.box2d.body
 import ktx.box2d.circle
 import kotlin.random.Random
 
-class Ball (private var color : GameColor = GameColor.RANDOM, world: World, positionX : Float, positionY : Float) {
+class Ball (private var color : GameColor = GameColor.RANDOM, private val world: World, private val positionX : Float, private val positionY : Float) {
     private var ballBody : Body? = null
     private var ballFixture : Fixture? = null
+
+    private val blueBallTexture by lazy { Texture("BlueBall.png") }
+    private val greenBallTexture by lazy { Texture("GreenBall.png") }
+    private val redBallTexture by lazy { Texture("RedBall.png") }
     init {
         if (color == GameColor.RANDOM){
             color = GameColor.entries[Random.nextInt(GameColor.entries.size - 1)]
@@ -19,15 +24,24 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, posi
         ballBody = world.body {
             position.set(positionX -20f, positionY- 20)
             type = BodyDef.BodyType.DynamicBody
-            circle(radius = 40f)
+            circle(radius = 20f)
             {disposeOfShape = true} }
-        ballFixture = ballBody!!.circle(radius = 40f){
+        ballFixture = ballBody!!.circle(radius = 20f){
             density = 0.5f
             friction = 0.4f
+            restitution = 0.1f
         }
     }
     fun getColor() : GameColor {
         return this.color
+    }
+    fun getTexture(): Texture? {
+        return when(color){
+            GameColor.GREEN -> greenBallTexture
+            GameColor.BLUE -> blueBallTexture
+            GameColor.RED -> redBallTexture
+            GameColor.RANDOM -> null
+        }
     }
     fun getBallBody (): Body? {
         return this.ballBody
