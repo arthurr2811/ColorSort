@@ -42,8 +42,8 @@ class ColorSortMainGame : ApplicationAdapter() {
         val screenX = 400f
         val screenY = 800f
         camera.setToOrtho(false, screenX, screenY)
-        contactListener = ContactListener(world, ballsList, ballsToRemoveList)
-        world.setContactListener(ContactListener(world, ballsList, ballsToRemoveList))
+        contactListener = ContactListener(ballsList, ballsToRemoveList)
+        world.setContactListener(contactListener)
         // spawner
         spawner = Spawner(screenX / 2, screenY - 60, 2f,world)
         // create hopper

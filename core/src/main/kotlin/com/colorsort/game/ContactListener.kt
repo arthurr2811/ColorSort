@@ -7,9 +7,8 @@ import com.badlogic.gdx.physics.box2d.ContactListener
 import com.badlogic.gdx.physics.box2d.EdgeShape
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.Manifold
-import com.badlogic.gdx.physics.box2d.World
 
-class ContactListener (private val world: World, private val ballsList : ArrayList<Ball>, private val ballsToRemoveList : ArrayList<Ball>) : ContactListener {
+class ContactListener (private val ballsList : ArrayList<Ball>, private val ballsToRemoveList : ArrayList<Ball>) : ContactListener {
     override fun beginContact(contact: Contact?) {
         val fixtureA = contact?.fixtureA
         val fixtureB = contact?.fixtureB
