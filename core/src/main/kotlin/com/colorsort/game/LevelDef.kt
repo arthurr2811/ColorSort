@@ -29,11 +29,11 @@ class LevelDef () {
     init {
         world.setContactListener(contactListener)
         Gdx.input.inputProcessor = GestureDetector(dispatcherController)
-        val greenHopper = Hopper(GameColor.GREEN, world, worldWidth * 0.5f, 0f)
+        val greenHopper = Hopper(GameColor.GREEN, world, worldWidth * 0.5f -2, 0f)
         hopperList.add(greenHopper)
-        val blueHopper = Hopper(GameColor.RED, world, worldWidth * 0.2f, 0f)
+        val blueHopper = Hopper(GameColor.RED, world, worldWidth * 0.2f -2, 0f)
         hopperList.add(blueHopper)
-        val redHopper = Hopper(GameColor.BLUE, world, worldWidth * 0.8f, 0f)
+        val redHopper = Hopper(GameColor.BLUE, world, worldWidth * 0.8f -2, 0f)
         hopperList.add(redHopper)
     }
 }

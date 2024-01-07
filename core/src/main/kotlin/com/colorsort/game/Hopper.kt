@@ -12,15 +12,15 @@ class Hopper(private var color : GameColor, world: World, private val positionX 
     private var hopperBody : Body? = null
     private var hopperFixture : Fixture? = null
     // Textures
-    private val blueHopperTexture by lazy { Texture("BlueHopper160_240.png") }
-    private val greenHopperTexture by lazy { Texture("GreenHopper160_240.png") }
-    private val redHopperTexture by lazy { Texture("RedHopper160_240.png") }
+    private val blueHopperTexture by lazy { Texture("BlueHopper200_240.png") }
+    private val greenHopperTexture by lazy { Texture("GreenHopper200_240.png") }
+    private val redHopperTexture by lazy { Texture("RedHopper200_240.png") }
     init {
         // create body as a simple line reaching from top left to top right from hopper
         hopperBody = world.body {
             position.set(positionX, positionY)
         }
-        hopperFixture = hopperBody!!.edge(from = Vector2(0f, 6f), to = Vector2(4f, 6f)){disposeOfShape = true}
+        hopperFixture = hopperBody!!.edge(from = Vector2(0f, 6f), to = Vector2(5f, 6f)){disposeOfShape = true}
     }
 
     fun getColor() : GameColor {
@@ -38,10 +38,10 @@ class Hopper(private var color : GameColor, world: World, private val positionX 
         return this.hopperBody
     }
     fun getTexturePosition() : Vector2 {
-        return Vector2(positionX -2, positionY)
+        return Vector2(positionX, positionY)
     }
     fun getTextureSize() : Vector2 {
-        return Vector2(4f,6f)
+        return Vector2(5f,6f)
     }
     fun getHopperFixture() : Fixture? {
         return this.hopperFixture

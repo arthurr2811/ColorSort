@@ -14,9 +14,9 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
     private var ballBody : Body? = null
     private var ballFixture : Fixture? = null
 
-    private val blueBallTexture by lazy { Texture("BlueBall40_40.png") }
-    private val greenBallTexture by lazy { Texture("GreenBall40_40.png") }
-    private val redBallTexture by lazy { Texture("RedBall40_40.png") }
+    private val blueBallTexture by lazy { Texture("BlueBall80_80.png") }
+    private val greenBallTexture by lazy { Texture("GreenBall80_80.png") }
+    private val redBallTexture by lazy { Texture("RedBall80_80.png") }
     init {
         if (color == GameColor.RANDOM){
             color = GameColor.entries[Random.nextInt(GameColor.entries.size - 1)]

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Matrix4
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 
@@ -23,11 +24,16 @@ class ColorSortMainGame : ApplicationAdapter() {
     private lateinit var viewport: Viewport
     private var scaleFactorX = 0f
     private var scaleFactorY = 0f
+    // debug render
+    private val debugRenderer by lazy { Box2DDebugRenderer() }
 
     /*
-    ToDo: add scaling
+    ToDo: cleanup code
+    ToDo: Implement obstacle (should be same as dispatcher)
+    ToDO: find right physics settings for default endless mode (dispatcher closer together?)
     ToDo: add score add highscore
-    Ideas for later: start screen, pause button and menue, adjustable gamerule (spawnspeed etc.)
+    Ideas for later: start screen, pause button and menue, adjustable gamerules,
+                     implement different levels (not endless, Level class boolean endless)
      */
 
     override fun create() {
@@ -41,6 +47,8 @@ class ColorSortMainGame : ApplicationAdapter() {
         screenHeight = Gdx.graphics.height.toFloat()
         scaleFactorX = screenWidth / worldWidth
         scaleFactorY = screenHeight / worldHeight
+        println(scaleFactorX)
+        println(scaleFactorY)
 
         // projection to screen size
         batch.projectionMatrix = Matrix4().setToOrtho2D(0f, 0f, screenWidth, screenHeight)
@@ -54,6 +62,8 @@ class ColorSortMainGame : ApplicationAdapter() {
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         camera.update()
+        // debug renderer
+        //debugRenderer.render(endlessMode.getWorld(), camera.combined)
         batch.begin()
         for (texturePosition in endlessMode.getNextTexturePositions()){
             batch.draw(texturePosition.texture, texturePosition.position.x * scaleFactorX, texturePosition.position.y * scaleFactorY, texturePosition.dimensions.x * scaleFactorX, texturePosition.dimensions.y * scaleFactorY) // texturewidth und texture height * scalfactorx sclafactor y

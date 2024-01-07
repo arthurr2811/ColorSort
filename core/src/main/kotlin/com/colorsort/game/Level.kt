@@ -69,4 +69,7 @@ class Level(levelDef: LevelDef)  {
         dispatcherRight.getTexture().dispose()
         dispatcherLeft.getTexture().dispose()
     }
+    fun getWorld () : World {
+        return this.world
+    }
 }
