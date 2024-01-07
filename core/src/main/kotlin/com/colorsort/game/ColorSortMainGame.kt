@@ -5,40 +5,25 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Matrix4
+import com.badlogic.gdx.utils.viewport.FitViewport
+import com.badlogic.gdx.utils.viewport.Viewport
 
 /** [com.badlogic.gdx.ApplicationListener] implementation shared by all platforms. */
 class ColorSortMainGame : ApplicationAdapter() {
     private val batch by lazy { SpriteBatch() }
-    // Game Objects textures ToDO move to coreesponding classes
-
-    //private val obstacleTexture by lazy { Texture("Obstacle.png") }
-
     // Camera
     private val camera : OrthographicCamera = OrthographicCamera()
-    // balls list with physics
-    /*
-    private val ballsList : ArrayList<Ball> = ArrayList()
-    private val ballsToRemoveList : ArrayList <Ball> = ArrayList()
-    private var lastSpawnTime : Long = 0
-    // hopper list with physics
-    private val hopperList : ArrayList<Hopper> = ArrayList()
-    private lateinit var world : World
-    private lateinit var contactListener : ContactListener
-    // spawner
-    private lateinit var spawner : Spawner
-    // dispatcher
-    private lateinit var dispatcherLeft: Dispatcher
-    private lateinit var dispatcherRight: Dispatcher
-    private lateinit var dispatcherController: DispatcherController
-    // borders
-    private lateinit var ground : DestroyingBorder
-    private lateinit var leftBorder : Border
-    private lateinit var rightBorder : Border
-
-     */
-
-
     private lateinit var endlessMode : Level
+    // world size and screen size
+    private var screenWidth = 0f
+    private var screenHeight = 0f
+    private val worldWidth = 40f
+    private val worldHeight = 80f
+    private lateinit var viewport: Viewport
+    private var scaleFactorX = 0f
+    private var scaleFactorY = 0f
+
     /*
     ToDo: add scaling
     ToDo: add score add highscore
@@ -47,22 +32,31 @@ class ColorSortMainGame : ApplicationAdapter() {
 
     override fun create() {
         // camera
-        val screenX = 400f
-        val screenY = 800f
-        camera.setToOrtho(false, screenX, screenY)
+        viewport = FitViewport(worldWidth, worldHeight, camera)
         // init endless mode
         val levelDef = LevelDef()
         endlessMode = Level(levelDef)
+        // set scale factors
+        screenWidth = Gdx.graphics.width.toFloat()
+        screenHeight = Gdx.graphics.height.toFloat()
+        scaleFactorX = screenWidth / worldWidth
+        scaleFactorY = screenHeight / worldHeight
+
+        // projection to screen size
+        batch.projectionMatrix = Matrix4().setToOrtho2D(0f, 0f, screenWidth, screenHeight)
+    }
+
+    override fun resize(width: Int, height: Int) {
+        viewport.update(width, height,true)
     }
 
     override fun render() {
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         camera.update()
-        batch.projectionMatrix = camera.combined
         batch.begin()
         for (texturePosition in endlessMode.getNextTexturePositions()){
-            batch.draw(texturePosition.texture, texturePosition.position.x, texturePosition.position.y)
+            batch.draw(texturePosition.texture, texturePosition.position.x * scaleFactorX, texturePosition.position.y * scaleFactorY, texturePosition.dimensions.x * scaleFactorX, texturePosition.dimensions.y * scaleFactorY) // texturewidth und texture height * scalfactorx sclafactor y
         }
         batch.end()
     }

@@ -14,9 +14,9 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
     private var ballBody : Body? = null
     private var ballFixture : Fixture? = null
 
-    private val blueBallTexture by lazy { Texture("BlueBall.png") }
-    private val greenBallTexture by lazy { Texture("GreenBall.png") }
-    private val redBallTexture by lazy { Texture("RedBall.png") }
+    private val blueBallTexture by lazy { Texture("BlueBall40_40.png") }
+    private val greenBallTexture by lazy { Texture("GreenBall40_40.png") }
+    private val redBallTexture by lazy { Texture("RedBall40_40.png") }
     init {
         if (color == GameColor.RANDOM){
             color = GameColor.entries[Random.nextInt(GameColor.entries.size - 1)]
@@ -26,7 +26,7 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
             position.set(positionX, positionY)
             type = BodyDef.BodyType.DynamicBody
         }
-        ballFixture = ballBody!!.circle(radius = 20f){
+        ballFixture = ballBody!!.circle(radius = 1f){// -> durchmesser also 2!!
             density = 0.5f
             friction = 0.4f
             restitution = 0.2f
@@ -51,8 +51,10 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
         return this.ballFixture
     }
     fun getTexturePosition(): Vector2 {
-        // postion is middle of ball, but texture start bottom right corner
-        return Vector2(ballBody!!.position.x - 20f, ballBody!!.position.y - 20f)
+        return Vector2(ballBody!!.position.x - 1f, ballBody!!.position.y - 1f)
+    }
+    fun getTextureSize() : Vector2 {
+        return Vector2(2f,2f)
     }
     fun destroyBody(world: World){
         val bodyToDestroy = this.getBallBody()

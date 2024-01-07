@@ -22,26 +22,26 @@ class Level(levelDef: LevelDef)  {
     private val leftBorder : Border = levelDef.leftBorder
     private val rightBorder : Border = levelDef.rightBorder
 
-    fun getNextTexturePositions () : ArrayList<TexturePosition> {
+    fun getNextTexturePositions () : ArrayList<TextureDrawHelper> {
         // step the world
         doStep()
         // collect updated positions
-        val nextTexturePositions : ArrayList<TexturePosition> = ArrayList()
+        val textureDrawHelpers : ArrayList<TextureDrawHelper> = ArrayList()
         // hopper
         for (hopper in hopperList){
-            nextTexturePositions.add(TexturePosition(hopper.getTexture()!!, hopper.getTexturePosition()))
+            textureDrawHelpers.add(TextureDrawHelper(hopper.getTexture()!!, hopper.getTexturePosition(), hopper.getTextureSize()))
         }
         // dispatcher
-        nextTexturePositions.add(TexturePosition(dispatcherLeft.getTexture(), dispatcherLeft.getTexturePosition()))
-        nextTexturePositions.add(TexturePosition(dispatcherRight.getTexture(), dispatcherRight.getTexturePosition()))
+        textureDrawHelpers.add(TextureDrawHelper(dispatcherLeft.getTexture(), dispatcherLeft.getTexturePosition(), dispatcherLeft.getTextureSize()))
+        textureDrawHelpers.add(TextureDrawHelper(dispatcherRight.getTexture(), dispatcherRight.getTexturePosition(), dispatcherRight.getTextureSize()))
         // balls
         for (ball in ballsList){
-            nextTexturePositions.add(TexturePosition(ball.getTexture()!!, ball.getTexturePosition()))
+            textureDrawHelpers.add(TextureDrawHelper(ball.getTexture()!!, ball.getTexturePosition(), ball.getTextureSize()))
         }
         // spawner
-        nextTexturePositions.add(TexturePosition(spawner.spawnerTexture, spawner.getTexturePosition()))
+        textureDrawHelpers.add(TextureDrawHelper(spawner.spawnerTexture, spawner.getTexturePosition(), spawner.getTextureSize()))
 
-        return nextTexturePositions
+        return textureDrawHelpers
     }
     private fun doStep () {
         val currentTime : Long = TimeUtils.nanoTime()
