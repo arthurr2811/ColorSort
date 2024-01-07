@@ -1,5 +1,6 @@
 package com.colorsort.game
 
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.Fixture
@@ -7,9 +8,11 @@ import com.badlogic.gdx.physics.box2d.World
 import ktx.box2d.body
 import ktx.box2d.polygon
 
-class Dispatcher (world: World, private val positionX : Float, private val positionY : Float, orientation: DispatcherOrientation) {
+class Dispatcher (world: World, private val positionX : Float, private val positionY : Float, private val orientation: DispatcherOrientation) {
     private var dispatcherBody : Body? = null
     private var dispatcherFixture : Fixture? = null
+    private val dispatcherLeftTexture by lazy { Texture("DispatcherLeft.png") }
+    private val dispatcherRightTexture by lazy { Texture("DispatcherRight.png") }
     init {
         if (orientation == DispatcherOrientation.LEFT){
             dispatcherBody = world.body {
@@ -31,5 +34,12 @@ class Dispatcher (world: World, private val positionX : Float, private val posit
     }
     fun getDispatcherFixture() : Fixture? {
         return this.dispatcherFixture
+    }
+    fun getTexture () : Texture {
+        return if (orientation == DispatcherOrientation.RIGHT){
+            dispatcherRightTexture
+        } else {
+            dispatcherLeftTexture
+        }
     }
 }

@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.World
 import ktx.box2d.body
 import ktx.box2d.edge
 
-class Despawner(world: World, statPoint : Vector2, endPoint : Vector2, bodyPosition : Vector2) {
+class DestroyingBorder(world: World, statPoint : Vector2, endPoint : Vector2, bodyPosition : Vector2) {
     private var borderBody : Body? = null
     private var borderFixture : Fixture? = null
     init {
