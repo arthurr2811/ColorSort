@@ -17,6 +17,11 @@ class LevelDef () {
     var world : World = World(Vector2(0f,-9.8f), true)
     var contactListener : ContactListener? = null
 
+    var gameState = GameState.STARTSCREEN
+    val gameOverScreen = GameOverScreen()
+    val startScreen = StartScreen()
+    val pauseScreen = GamePause()
+
 
     var spawner : Spawner = Spawner(worldWidth / 2, worldHeight - 5, 2f,world)
     var dispatcherLeft: Dispatcher = Dispatcher(world, 11f, worldHeight - 32f, DispatcherOrientation.LEFT)

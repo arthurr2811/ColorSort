@@ -1,7 +1,6 @@
 package com.colorsort.game
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.input.GestureDetector
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.TimeUtils
@@ -16,7 +15,7 @@ class Level(levelDef: LevelDef)  {
     private val spawner : Spawner = levelDef.spawner
     private val dispatcherLeft: Dispatcher = levelDef.dispatcherLeft
     private val dispatcherRight: Dispatcher = levelDef.dispatcherRight
-    private val dispatcherController: DispatcherController = levelDef.dispatcherController
+    val dispatcherController: DispatcherController = levelDef.dispatcherController
 
     val ground : DestroyingBorder = levelDef.ground
     private val leftBorder : Border = levelDef.leftBorder
@@ -24,6 +23,11 @@ class Level(levelDef: LevelDef)  {
     // world and collision
     private val world : World = levelDef.world
     private var contactListener : ContactListener = ContactListener(this)
+    // game state
+    var gameState = levelDef.gameState
+    private val startScreen = levelDef.startScreen
+    private val gameOverScreen = levelDef.gameOverScreen
+    private val pauseScreen = levelDef.pauseScreen
     // for ball spawning
     private var lastSpawnTime : Long = 0
     // score
@@ -31,25 +35,27 @@ class Level(levelDef: LevelDef)  {
     private var highScore = 0
 
     init {
-        // init physics
         world.setContactListener(contactListener)
-        Gdx.input.inputProcessor = GestureDetector(dispatcherController)
     }
 
     fun getTexts() : ArrayList<TextDrawHelper>{
         // draw score
         val texts = ArrayList<TextDrawHelper>()
         // draw score top center
-        texts.add(TextDrawHelper("Score", Vector2(20f, 78f)))
-        texts.add(TextDrawHelper(score.toString(), Vector2(20f, 76f)))
+        if (gameState != GameState.STARTSCREEN){
+            texts.add(TextDrawHelper("Score", Vector2(20f, 78f)))
+            texts.add(TextDrawHelper(score.toString(), Vector2(20f, 76f)))
+        }
         return texts
     }
 
     // returns the textures, their position and scale, at next step.
     // 1 step is 1 iteration of the world (calculating all physics)
     fun getNextTexturePositions () : ArrayList<TextureDrawHelper> {
-        // step the world
-        doStep()
+        if (gameState == GameState.INGAME){
+            // step the world
+            doStep()
+        }
         // collect updated positions
         val textureDrawHelpers : ArrayList<TextureDrawHelper> = ArrayList()
         // for hopper
@@ -69,6 +75,18 @@ class Level(levelDef: LevelDef)  {
         }
         // for spawner
         textureDrawHelpers.add(TextureDrawHelper(spawner.getTexture(), spawner.getTexturePosition(), spawner.getTextureSize()))
+        // puse button
+        textureDrawHelpers.add(TextureDrawHelper(Texture("PauseButton80_80.png"), Vector2(37f, 77f), Vector2(2f,2f)))
+        // for start screen
+        if (gameState == GameState.STARTSCREEN){
+            textureDrawHelpers.add(TextureDrawHelper(startScreen.getTexture(), startScreen.getTexturePosition(), startScreen.getTextureSize()))
+        }
+        if (gameState == GameState.GAMEOVER){
+            textureDrawHelpers.add(TextureDrawHelper(gameOverScreen.getTexture(), gameOverScreen.getTexturePosition(), gameOverScreen.getTextureSize()))
+        }
+        if (gameState == GameState.PAUSED){
+            textureDrawHelpers.add(TextureDrawHelper(pauseScreen.getTexture(), pauseScreen.getTexturePosition(), pauseScreen.getTextureSize()))
+        }
 
         return textureDrawHelpers
     }
@@ -116,6 +134,9 @@ class Level(levelDef: LevelDef)  {
     }
     fun gameOver() {
         score = 0
+        dispatcherController.center()
         lastSpawnTime = TimeUtils.nanoTime()
+        ballsToRemoveList.addAll(ballsList)
+        gameState = GameState.GAMEOVER
     }
 }

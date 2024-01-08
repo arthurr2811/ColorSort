@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.utils.Align
@@ -31,11 +32,15 @@ class ColorSortMainGame : ApplicationAdapter() {
     lateinit var font : BitmapFont
     // debug render
     private val debugRenderer by lazy { Box2DDebugRenderer() }
+    // input handler
+    lateinit var inputHandler: InputHandler
 
     /*
+    ToDo clean code
+    FiXme: Dispatcher reset on game over
     ToDO: find right physics settings for default endless mode (dispatcher closer together?)
     ToDo: implement highscore
-    ToDO: game pause and proper game restart on game over. tap to start
+
     Ideas for later: menue, adjustable gamerules,
                      implement different levels (not endless, Level class boolean endless).
      */
@@ -56,6 +61,10 @@ class ColorSortMainGame : ApplicationAdapter() {
         // font
         font = BitmapFont()
         font.data.setScale(2f)
+        // input handler
+        // init physics
+        inputHandler = InputHandler(endlessMode)
+        Gdx.input.inputProcessor = GestureDetector(inputHandler)
     }
     // sizes camera to screen size
     override fun resize(width: Int, height: Int) {
