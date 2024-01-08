@@ -8,6 +8,7 @@ class Level(levelDef: LevelDef)  {
     private val ballsList : ArrayList<Ball> = levelDef.ballsList
     private val ballsToRemoveList : ArrayList <Ball> = levelDef.ballsToRemoveList
     private val hopperList : ArrayList<Hopper> = levelDef.hopperList
+    private val obstacleList : ArrayList<Obstacle> = levelDef.obstacleList
 
     private val spawner : Spawner = levelDef.spawner
     private val dispatcherLeft: Dispatcher = levelDef.dispatcherLeft
@@ -36,6 +37,10 @@ class Level(levelDef: LevelDef)  {
         for (hopper in hopperList){
             textureDrawHelpers.add(TextureDrawHelper(hopper.getTexture()!!, hopper.getTexturePosition(), hopper.getTextureSize()))
         }
+        // for obstacles
+        for (obstacle in obstacleList){
+            textureDrawHelpers.add(TextureDrawHelper(obstacle.getTexture(), obstacle.getTexturePosition(), obstacle.getTextureSize()))
+        }
         // for dispatcher
         textureDrawHelpers.add(TextureDrawHelper(dispatcherLeft.getTexture(), dispatcherLeft.getTexturePosition(), dispatcherLeft.getTextureSize()))
         textureDrawHelpers.add(TextureDrawHelper(dispatcherRight.getTexture(), dispatcherRight.getTexturePosition(), dispatcherRight.getTextureSize()))
@@ -44,7 +49,7 @@ class Level(levelDef: LevelDef)  {
             textureDrawHelpers.add(TextureDrawHelper(ball.getTexture()!!, ball.getTexturePosition(), ball.getTextureSize()))
         }
         // for spawner
-        textureDrawHelpers.add(TextureDrawHelper(spawner.spawnerTexture, spawner.getTexturePosition(), spawner.getTextureSize()))
+        textureDrawHelpers.add(TextureDrawHelper(spawner.getTexture(), spawner.getTexturePosition(), spawner.getTextureSize()))
 
         return textureDrawHelpers
     }
@@ -76,7 +81,7 @@ class Level(levelDef: LevelDef)  {
         for (hopper in hopperList){
             hopper.getTexture()?.dispose()
         }
-        spawner.spawnerTexture.dispose()
+        spawner.getTexture().dispose()
         dispatcherRight.getTexture().dispose()
         dispatcherLeft.getTexture().dispose()
     }

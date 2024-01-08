@@ -46,7 +46,7 @@ class ContactListener (private val ballsList : ArrayList<Ball>, private val ball
     private fun deleteBallFromFixture(ballFixture : Fixture?) {
         // remove ball from List and destroy its body (and with that also its fixture)
         if (ballFixture != null){
-            val ballToRemove = ballsList.find { it.getBallFixture() == ballFixture }
+            val ballToRemove = ballsList.find { it.getFixture() == ballFixture }
             if (ballToRemove != null){
                 // DON'T REMOVE DIRECT we are in a physics step: https://www.iforce2d.net/b2dtut/removing-bodies#:~:text=The%20actual%20code%20to%20remove,timestep%2C%20usually%20a%20collision%20callback.
                 if (!ballsToRemoveList.contains(ballToRemove)){

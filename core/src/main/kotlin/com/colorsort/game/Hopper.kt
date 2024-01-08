@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.World
 import ktx.box2d.body
 import ktx.box2d.edge
 // where the balls should land
-class Hopper(private var color : GameColor, world: World, private val positionX : Float, private val positionY : Float) {
+class Hopper(private var color : GameColor, world: World, private val positionX : Float, private val positionY : Float) : GameObject {
     // physics
     private var hopperBody : Body? = null
     private var hopperFixture : Fixture? = null
@@ -27,7 +27,7 @@ class Hopper(private var color : GameColor, world: World, private val positionX 
     fun getColor() : GameColor {
         return this.color
     }
-    fun getTexture(): Texture? {
+    override fun getTexture(): Texture? {
         return when(color){
             GameColor.GREEN -> greenHopperTexture
             GameColor.BLUE -> blueHopperTexture
@@ -35,17 +35,17 @@ class Hopper(private var color : GameColor, world: World, private val positionX 
             GameColor.RANDOM -> null
         }
     }
-    private fun getHopperBody (): Body? {
-        return this.hopperBody
-    }
     // edge fixtures dont have offset problem
-    fun getTexturePosition() : Vector2 {
+    override fun getTexturePosition() : Vector2 {
         return Vector2(positionX, positionY)
     }
-    fun getTextureSize() : Vector2 {
+    override fun getTextureSize() : Vector2 {
         return Vector2(5f,6f)
     }
-    fun getHopperFixture() : Fixture? {
+    override fun getBody (): Body? {
+        return this.hopperBody
+    }
+    override fun getFixture() : Fixture? {
         return this.hopperFixture
     }
 }

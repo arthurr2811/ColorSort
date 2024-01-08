@@ -33,7 +33,9 @@ class ColorSortMainGame : ApplicationAdapter() {
     ToDO: find right physics settings for default endless mode (dispatcher closer together?)
     ToDo: add score add highscore
     Ideas for later: start screen, pause button and menue, adjustable gamerules,
-                     implement different levels (not endless, Level class boolean endless)
+                     implement different levels (not endless, Level class boolean endless).
+                     GameObject interface with all the getFixture, getTexturePosition functions
+                     which every concrete game object (ball, dispatcher etc. implement)
      */
     // init everything
     override fun create() {

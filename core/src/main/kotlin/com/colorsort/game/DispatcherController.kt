@@ -16,19 +16,19 @@ class DispatcherController(private val dispatcherLeft: Dispatcher, private val d
         return true
     }
     private fun moveDispatcher(deltaX: Float){
-        // only move left one, right one is just fixed 14f more to the right
-        val currentPositionDispLeft = dispatcherLeft.getDispatcherBody()!!.position
+        // only move left one, right one is just fixed 10f more to the right
+        val currentPositionDispLeft = dispatcherLeft.getBody()!!.position
         val newPositionDispLeft = Vector2(currentPositionDispLeft.x + deltaX * sensitivity, currentPositionDispLeft.y)
-        val newPositionDispRight = Vector2(newPositionDispLeft.x + 14f, newPositionDispLeft.y)
+        val newPositionDispRight = Vector2(newPositionDispLeft.x + 10f, newPositionDispLeft.y)
         // make sure dispatcher is not moved to far
         if (newPositionDispLeft.x < 1f){
             newPositionDispLeft.x = 1f
-            newPositionDispRight.x = 15f
-        } else if (newPositionDispLeft.x > 18){
-            newPositionDispLeft.x = 18f
+            newPositionDispRight.x = 11f
+        } else if (newPositionDispLeft.x > 22){
+            newPositionDispLeft.x = 22f
             newPositionDispRight.x = 32f
             }
-        dispatcherLeft.getDispatcherBody()!!.setTransform(newPositionDispLeft, 0f)
-        dispatcherRight.getDispatcherBody()!!.setTransform(newPositionDispRight, 0f)
+        dispatcherLeft.getBody()!!.setTransform(newPositionDispLeft, 0f)
+        dispatcherRight.getBody()!!.setTransform(newPositionDispRight, 0f)
     }
 }

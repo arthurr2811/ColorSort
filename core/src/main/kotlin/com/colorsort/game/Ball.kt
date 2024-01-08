@@ -10,7 +10,7 @@ import ktx.box2d.body
 import ktx.box2d.circle
 import kotlin.random.Random
 // a ball of certain color
-class Ball (private var color : GameColor = GameColor.RANDOM, world: World, private val positionX : Float, private val positionY : Float) {
+class Ball (private var color : GameColor = GameColor.RANDOM, world: World, private val positionX : Float, private val positionY : Float) : GameObject {
     // physics
     private var ballBody : Body? = null
     private var ballFixture : Fixture? = null
@@ -37,7 +37,7 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
     fun getColor() : GameColor {
         return this.color
     }
-    fun getTexture(): Texture? {
+    override fun getTexture(): Texture? {
         return when(color){
             GameColor.GREEN -> greenBallTexture
             GameColor.BLUE -> blueBallTexture
@@ -45,22 +45,22 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
             GameColor.RANDOM -> null
         }
     }
-    private fun getBallBody (): Body? {
-        return this.ballBody
-    }
-    fun getBallFixture() : Fixture? {
-        return this.ballFixture
-    }
     // the texture is rendered from bottom left, the body position is in center of body
     // so we need to offset the texture by half the shapes size
-    fun getTexturePosition(): Vector2 {
+    override fun getTexturePosition(): Vector2 {
         return Vector2(ballBody!!.position.x - 1f, ballBody!!.position.y - 1f)
     }
-    fun getTextureSize() : Vector2 {
+    override fun getTextureSize() : Vector2 {
         return Vector2(2f,2f)
     }
+    override fun getBody (): Body? {
+        return this.ballBody
+    }
+    override fun getFixture() : Fixture? {
+        return this.ballFixture
+    }
     fun destroyBody(world: World){
-        val bodyToDestroy = this.getBallBody()
+        val bodyToDestroy = this.getBody()
         this.ballBody = null
         // do not destroy body before setting ball.Body null!
         if (bodyToDestroy != null){

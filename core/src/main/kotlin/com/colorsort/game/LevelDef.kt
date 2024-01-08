@@ -14,26 +14,35 @@ class LevelDef () {
 
     val hopperList : ArrayList<Hopper> = ArrayList()
 
+    val obstacleList : ArrayList<Obstacle> = ArrayList()
+
     var world : World = World(Vector2(0f,-9.8f), true)
     var contactListener : ContactListener = ContactListener(ballsList, ballsToRemoveList)
 
 
     var spawner : Spawner = Spawner(worldWidth / 2, worldHeight - 5, 2f,world)
-    var dispatcherLeft: Dispatcher = Dispatcher(world, 9f, worldHeight - 32f, DispatcherOrientation.LEFT)
-    var dispatcherRight: Dispatcher = Dispatcher(world, 23f, worldHeight - 32f, DispatcherOrientation.RIGHT)
+    var dispatcherLeft: Dispatcher = Dispatcher(world, 11f, worldHeight - 32f, DispatcherOrientation.LEFT)
+    var dispatcherRight: Dispatcher = Dispatcher(world, 21f, worldHeight - 32f, DispatcherOrientation.RIGHT)
     var dispatcherController: DispatcherController = DispatcherController(dispatcherLeft, dispatcherRight, 0.3f)
 
     var ground : DestroyingBorder = DestroyingBorder(world, Vector2(0f, 0f), Vector2(40f, 0f), Vector2(0f, 0.1f))
     var leftBorder : Border = Border(world, 0.1f, 80f, Vector2(0.05f, 40f))
     var rightBorder : Border = Border(world, 0.1f, 80f, Vector2(39.95f, 40f))
     init {
+        // init physics
         world.setContactListener(contactListener)
         Gdx.input.inputProcessor = GestureDetector(dispatcherController)
+        // init standard hopper setup (hopperList can of course be changed)
         val greenHopper = Hopper(GameColor.GREEN, world, worldWidth * 0.5f -2, 0f)
         hopperList.add(greenHopper)
         val blueHopper = Hopper(GameColor.RED, world, worldWidth * 0.2f -2, 0f)
         hopperList.add(blueHopper)
         val redHopper = Hopper(GameColor.BLUE, world, worldWidth * 0.8f -2, 0f)
         hopperList.add(redHopper)
+        // init standard obstacle setup (obstacle List can of course be changed)
+        val leftObstacle = Obstacle(world, worldWidth * 0.35f -2, worldHeight * 0.2f)
+        obstacleList.add(leftObstacle)
+        val rightObstacle = Obstacle(world, worldWidth * 0.65f -2, worldHeight * 0.2f)
+        obstacleList.add(rightObstacle)
     }
 }
