@@ -9,11 +9,12 @@ import com.badlogic.gdx.physics.box2d.World
 import ktx.box2d.body
 import ktx.box2d.circle
 import kotlin.random.Random
-
+// a ball of certain color
 class Ball (private var color : GameColor = GameColor.RANDOM, world: World, private val positionX : Float, private val positionY : Float) {
+    // physics
     private var ballBody : Body? = null
     private var ballFixture : Fixture? = null
-
+    // textures
     private val blueBallTexture by lazy { Texture("BlueBall80_80.png") }
     private val greenBallTexture by lazy { Texture("GreenBall80_80.png") }
     private val redBallTexture by lazy { Texture("RedBall80_80.png") }
@@ -21,12 +22,12 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
         if (color == GameColor.RANDOM){
             color = GameColor.entries[Random.nextInt(GameColor.entries.size - 1)]
         }
-        // create physics2D body
+        // create physics2D body and fixture
         ballBody = world.body {
             position.set(positionX, positionY)
             type = BodyDef.BodyType.DynamicBody
         }
-        ballFixture = ballBody!!.circle(radius = 1f){// -> durchmesser also 2!!
+        ballFixture = ballBody!!.circle(radius = 1f){// -> durchmesser also 2!
             density = 0.5f
             friction = 0.4f
             restitution = 0.2f
@@ -50,6 +51,8 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
     fun getBallFixture() : Fixture? {
         return this.ballFixture
     }
+    // the texture is rendered from bottom left, the body position is in center of body
+    // so we need to offset the texture by half the shapes size
     fun getTexturePosition(): Vector2 {
         return Vector2(ballBody!!.position.x - 1f, ballBody!!.position.y - 1f)
     }
@@ -59,7 +62,7 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
     fun destroyBody(world: World){
         val bodyToDestroy = this.getBallBody()
         this.ballBody = null
-        // make sure to not remove something that's null!
+        // do not destroy body before setting ball.Body null!
         if (bodyToDestroy != null){
             world.destroyBody(bodyToDestroy)
         }

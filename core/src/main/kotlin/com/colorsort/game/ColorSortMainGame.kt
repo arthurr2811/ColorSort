@@ -12,11 +12,10 @@ import com.badlogic.gdx.utils.viewport.Viewport
 
 /** [com.badlogic.gdx.ApplicationListener] implementation shared by all platforms. */
 class ColorSortMainGame : ApplicationAdapter() {
-    private val batch by lazy { SpriteBatch() }
-    // Camera
+    // Camera and render
     private val camera : OrthographicCamera = OrthographicCamera()
-    private lateinit var endlessMode : Level
-    // world size and screen size
+    private val batch by lazy { SpriteBatch() }
+    // world size, screen size, scaling
     private var screenWidth = 0f
     private var screenHeight = 0f
     private val worldWidth = 40f
@@ -24,18 +23,19 @@ class ColorSortMainGame : ApplicationAdapter() {
     private lateinit var viewport: Viewport
     private var scaleFactorX = 0f
     private var scaleFactorY = 0f
+    // level endless mode
+    private lateinit var endlessMode : Level
     // debug render
     private val debugRenderer by lazy { Box2DDebugRenderer() }
 
     /*
-    ToDo: cleanup code
     ToDo: Implement obstacle (should be same as dispatcher)
     ToDO: find right physics settings for default endless mode (dispatcher closer together?)
     ToDo: add score add highscore
     Ideas for later: start screen, pause button and menue, adjustable gamerules,
                      implement different levels (not endless, Level class boolean endless)
      */
-
+    // init everything
     override fun create() {
         // camera
         viewport = FitViewport(worldWidth, worldHeight, camera)
@@ -47,23 +47,23 @@ class ColorSortMainGame : ApplicationAdapter() {
         screenHeight = Gdx.graphics.height.toFloat()
         scaleFactorX = screenWidth / worldWidth
         scaleFactorY = screenHeight / worldHeight
-        println(scaleFactorX)
-        println(scaleFactorY)
-
-        // projection to screen size
+        // set projection to screen size
         batch.projectionMatrix = Matrix4().setToOrtho2D(0f, 0f, screenWidth, screenHeight)
     }
-
+    // sizes camera to screen size
     override fun resize(width: Int, height: Int) {
         viewport.update(width, height,true)
     }
-
+    // render everything
     override fun render() {
-        Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f)
+        // set background color to light grey
+        Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+        // update camera
         camera.update()
         // debug renderer
-        //debugRenderer.render(endlessMode.getWorld(), camera.combined)
+        debugRenderer.render(endlessMode.getWorld(), camera.combined)
+        // draw on batch
         batch.begin()
         for (texturePosition in endlessMode.getNextTexturePositions()){
             batch.draw(texturePosition.texture, texturePosition.position.x * scaleFactorX, texturePosition.position.y * scaleFactorY, texturePosition.dimensions.x * scaleFactorX, texturePosition.dimensions.y * scaleFactorY) // texturewidth und texture height * scalfactorx sclafactor y
@@ -71,6 +71,7 @@ class ColorSortMainGame : ApplicationAdapter() {
         batch.end()
     }
     override fun dispose() {
+        // dispose textures
         endlessMode.dispose()
     }
 }

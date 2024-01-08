@@ -7,16 +7,17 @@ import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.World
 import ktx.box2d.body
 import ktx.box2d.edge
-
+// where the balls should land
 class Hopper(private var color : GameColor, world: World, private val positionX : Float, private val positionY : Float) {
+    // physics
     private var hopperBody : Body? = null
     private var hopperFixture : Fixture? = null
-    // Textures
+    // textures
     private val blueHopperTexture by lazy { Texture("BlueHopper200_240.png") }
     private val greenHopperTexture by lazy { Texture("GreenHopper200_240.png") }
     private val redHopperTexture by lazy { Texture("RedHopper200_240.png") }
     init {
-        // create body as a simple line reaching from top left to top right from hopper
+        // body is just a line on top of the hopper
         hopperBody = world.body {
             position.set(positionX, positionY)
         }
@@ -37,6 +38,7 @@ class Hopper(private var color : GameColor, world: World, private val positionX 
     private fun getHopperBody (): Body? {
         return this.hopperBody
     }
+    // edge fixtures dont have offset problem
     fun getTexturePosition() : Vector2 {
         return Vector2(positionX, positionY)
     }

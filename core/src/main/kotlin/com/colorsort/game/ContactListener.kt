@@ -7,11 +7,12 @@ import com.badlogic.gdx.physics.box2d.ContactListener
 import com.badlogic.gdx.physics.box2d.EdgeShape
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.Manifold
-
+// whenever bodies collide contactListener functions are called
 class ContactListener (private val ballsList : ArrayList<Ball>, private val ballsToRemoveList : ArrayList<Ball>) : ContactListener {
     override fun beginContact(contact: Contact?) {
         val fixtureA = contact?.fixtureA
         val fixtureB = contact?.fixtureB
+        // if ball collides with hopper remove ball ToDO: if colors match update score otherwise game over
         if (isBallFixture(fixtureA) && isHopperFixture(fixtureB)){
             deleteBallFromFixture(fixtureA)
         } else if (isBallFixture(fixtureB) && isHopperFixture(fixtureA)) {
@@ -36,6 +37,7 @@ class ContactListener (private val ballsList : ArrayList<Ball>, private val ball
     }
     private fun isHopperFixture(fixture: Fixture?) : Boolean{
         return if (fixture != null) {
+            // FixME: borders also edgeShape
             fixture.shape is EdgeShape
         } else {
             false

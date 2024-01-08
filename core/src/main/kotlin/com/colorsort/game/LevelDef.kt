@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
-// to define a Level, has standard values for basic endless game, everything can be changed
+// define a Level, has standard values for basic endless game, everything can be changed
 class LevelDef () {
     private val worldWidth = 40f
     private val worldHeight = 80f
