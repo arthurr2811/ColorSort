@@ -1,7 +1,5 @@
 package com.colorsort.game
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 // define a Level, has standard values for basic endless game, everything can be changed
@@ -17,7 +15,7 @@ class LevelDef () {
     val obstacleList : ArrayList<Obstacle> = ArrayList()
 
     var world : World = World(Vector2(0f,-9.8f), true)
-    var contactListener : ContactListener = ContactListener(ballsList, ballsToRemoveList)
+    var contactListener : ContactListener? = null
 
 
     var spawner : Spawner = Spawner(worldWidth / 2, worldHeight - 5, 2f,world)
@@ -29,9 +27,6 @@ class LevelDef () {
     var leftBorder : Border = Border(world, 0.1f, 80f, Vector2(0.05f, 40f))
     var rightBorder : Border = Border(world, 0.1f, 80f, Vector2(39.95f, 40f))
     init {
-        // init physics
-        world.setContactListener(contactListener)
-        Gdx.input.inputProcessor = GestureDetector(dispatcherController)
         // init standard hopper setup (hopperList can of course be changed)
         val greenHopper = Hopper(GameColor.GREEN, world, worldWidth * 0.5f -2, 0f)
         hopperList.add(greenHopper)

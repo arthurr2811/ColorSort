@@ -1,13 +1,16 @@
 package com.colorsort.game
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.input.GestureDetector
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.TimeUtils
 // a level defined by given level definition
 class Level(levelDef: LevelDef)  {
     // objects
-    private val ballsList : ArrayList<Ball> = levelDef.ballsList
-    private val ballsToRemoveList : ArrayList <Ball> = levelDef.ballsToRemoveList
-    private val hopperList : ArrayList<Hopper> = levelDef.hopperList
+    val ballsList : ArrayList<Ball> = levelDef.ballsList
+    val ballsToRemoveList : ArrayList <Ball> = levelDef.ballsToRemoveList
+    val hopperList : ArrayList<Hopper> = levelDef.hopperList
     private val obstacleList : ArrayList<Obstacle> = levelDef.obstacleList
 
     private val spawner : Spawner = levelDef.spawner
@@ -15,16 +18,32 @@ class Level(levelDef: LevelDef)  {
     private val dispatcherRight: Dispatcher = levelDef.dispatcherRight
     private val dispatcherController: DispatcherController = levelDef.dispatcherController
 
-    private val ground : DestroyingBorder = levelDef.ground
+    val ground : DestroyingBorder = levelDef.ground
     private val leftBorder : Border = levelDef.leftBorder
     private val rightBorder : Border = levelDef.rightBorder
     // world and collision
     private val world : World = levelDef.world
-    private val contactListener : ContactListener = levelDef.contactListener
+    private var contactListener : ContactListener = ContactListener(this)
     // for ball spawning
     private var lastSpawnTime : Long = 0
+    // score
+    private var score = 0
+    private var highScore = 0
 
+    init {
+        // init physics
+        world.setContactListener(contactListener)
+        Gdx.input.inputProcessor = GestureDetector(dispatcherController)
+    }
 
+    fun getTexts() : ArrayList<TextDrawHelper>{
+        // draw score
+        val texts = ArrayList<TextDrawHelper>()
+        // draw score top center
+        texts.add(TextDrawHelper("Score", Vector2(20f, 78f)))
+        texts.add(TextDrawHelper(score.toString(), Vector2(20f, 76f)))
+        return texts
+    }
 
     // returns the textures, their position and scale, at next step.
     // 1 step is 1 iteration of the world (calculating all physics)
@@ -87,5 +106,16 @@ class Level(levelDef: LevelDef)  {
     }
     fun getWorld () : World {
         return this.world
+    }
+    fun updateScore (amount : Int){
+        score += amount
+        println(score)
+    }
+    fun setHighScore (value : Int){
+        highScore = value
+    }
+    fun gameOver() {
+        score = 0
+        lastSpawnTime = TimeUtils.nanoTime()
     }
 }

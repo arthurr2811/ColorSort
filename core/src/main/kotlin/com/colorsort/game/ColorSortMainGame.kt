@@ -4,9 +4,11 @@ import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
+import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 
@@ -25,17 +27,17 @@ class ColorSortMainGame : ApplicationAdapter() {
     private var scaleFactorY = 0f
     // level endless mode
     private lateinit var endlessMode : Level
+    // font
+    lateinit var font : BitmapFont
     // debug render
     private val debugRenderer by lazy { Box2DDebugRenderer() }
 
     /*
-    ToDo: Implement obstacle (should be same as dispatcher)
     ToDO: find right physics settings for default endless mode (dispatcher closer together?)
-    ToDo: add score add highscore
-    Ideas for later: start screen, pause button and menue, adjustable gamerules,
+    ToDo: implement highscore
+    ToDO: game pause and proper game restart on game over. tap to start
+    Ideas for later: menue, adjustable gamerules,
                      implement different levels (not endless, Level class boolean endless).
-                     GameObject interface with all the getFixture, getTexturePosition functions
-                     which every concrete game object (ball, dispatcher etc. implement)
      */
     // init everything
     override fun create() {
@@ -51,6 +53,9 @@ class ColorSortMainGame : ApplicationAdapter() {
         scaleFactorY = screenHeight / worldHeight
         // set projection to screen size
         batch.projectionMatrix = Matrix4().setToOrtho2D(0f, 0f, screenWidth, screenHeight)
+        // font
+        font = BitmapFont()
+        font.data.setScale(2f)
     }
     // sizes camera to screen size
     override fun resize(width: Int, height: Int) {
@@ -68,7 +73,11 @@ class ColorSortMainGame : ApplicationAdapter() {
         // draw on batch
         batch.begin()
         for (texturePosition in endlessMode.getNextTexturePositions()){
-            batch.draw(texturePosition.texture, texturePosition.position.x * scaleFactorX, texturePosition.position.y * scaleFactorY, texturePosition.dimensions.x * scaleFactorX, texturePosition.dimensions.y * scaleFactorY) // texturewidth und texture height * scalfactorx sclafactor y
+            batch.draw(texturePosition.texture, texturePosition.position.x * scaleFactorX, texturePosition.position.y * scaleFactorY,
+                texturePosition.dimensions.x * scaleFactorX, texturePosition.dimensions.y * scaleFactorY)
+        }
+        for (text in endlessMode.getTexts()){
+            font.draw(batch, text.text, text.position.x * scaleFactorX, text.position.y * scaleFactorY, 0f, Align.center, false)
         }
         batch.end()
     }

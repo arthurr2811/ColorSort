@@ -16,4 +16,7 @@ class DestroyingBorder(world: World, statPoint : Vector2, endPoint : Vector2, bo
         }
         borderFixture = borderBody!!.edge(from = statPoint, to = endPoint)
     }
+    fun getFixture() : Fixture? {
+        return this.borderFixture
+    }
 }

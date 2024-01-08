@@ -1,22 +1,17 @@
 package com.colorsort.game
 
-import com.badlogic.gdx.physics.box2d.CircleShape
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.ContactImpulse
 import com.badlogic.gdx.physics.box2d.ContactListener
-import com.badlogic.gdx.physics.box2d.EdgeShape
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.Manifold
 // whenever bodies collide contactListener functions are called
-class ContactListener (private val ballsList : ArrayList<Ball>, private val ballsToRemoveList : ArrayList<Ball>) : ContactListener {
+class ContactListener (private val level: Level) : ContactListener {
     override fun beginContact(contact: Contact?) {
         val fixtureA = contact?.fixtureA
         val fixtureB = contact?.fixtureB
-        // if ball collides with hopper remove ball ToDO: if colors match update score otherwise game over
-        if (isBallFixture(fixtureA) && isHopperFixture(fixtureB)){
-            deleteBallFromFixture(fixtureA)
-        } else if (isBallFixture(fixtureB) && isHopperFixture(fixtureA)) {
-            deleteBallFromFixture(fixtureB)
+        if (fixtureA != null && fixtureB != null){
+            handleCollisionOutcome(fixtureA, fixtureB)
         }
     }
 
@@ -28,32 +23,69 @@ class ContactListener (private val ballsList : ArrayList<Ball>, private val ball
 
     override fun postSolve(contact: Contact?, impulse: ContactImpulse?) {
     }
-    private fun isBallFixture(fixture: Fixture?) : Boolean{
-        return if (fixture != null) {
-            fixture.shape is CircleShape
+    private fun findBallFromFixture(fixture: Fixture?) : Ball?{
+        // if any ball.getfixure() in ballist == fixture the
+        return level.ballsList.find { it.getFixture() == fixture }
+    }
+    private fun findHopperFromFixture(fixture: Fixture?) : Hopper?{
+        return level.hopperList.find { it.getFixture() == fixture }
+    }
+    private fun findDestrBoarderFromFixture (fixture: Fixture?) : DestroyingBorder? {
+        return if(fixture == level.ground.getFixture()){
+            level.ground
         } else {
-            false
+            null
         }
     }
-    private fun isHopperFixture(fixture: Fixture?) : Boolean{
-        return if (fixture != null) {
-            // FixME: borders also edgeShape
-            fixture.shape is EdgeShape
-        } else {
-            false
-        }
-    }
-    private fun deleteBallFromFixture(ballFixture : Fixture?) {
-        // remove ball from List and destroy its body (and with that also its fixture)
-        if (ballFixture != null){
-            val ballToRemove = ballsList.find { it.getFixture() == ballFixture }
-            if (ballToRemove != null){
-                // DON'T REMOVE DIRECT we are in a physics step: https://www.iforce2d.net/b2dtut/removing-bodies#:~:text=The%20actual%20code%20to%20remove,timestep%2C%20usually%20a%20collision%20callback.
-                if (!ballsToRemoveList.contains(ballToRemove)){
-                    ballsToRemoveList.add(ballToRemove)
-                }
+    private fun handleCollisionOutcome (fixtureA: Fixture, fixtureB: Fixture){
+        // findClassFromFixtures returns the object of the Class or null, if fixture doesn't
+        // belong to an object of the class. So if maybeBallA null we know fixtureA
+        // didn't belong to a ball, otherwise we get the ball fixtureA belongs to.
+        val maybeBallA = findBallFromFixture(fixtureA)
+        val maybeBallB = findBallFromFixture(fixtureB)
+        val maybeHopperA = findHopperFromFixture(fixtureA)
+        val maybeHopperB = findHopperFromFixture(fixtureB)
+        val maybeDestBorderA = findDestrBoarderFromFixture(fixtureA)
+        val maybeDestBorderB = findDestrBoarderFromFixture(fixtureB)
+        // if fixtureA belongs to a ball and fixtureB belongs to a hopper
+        if (maybeBallA != null && maybeHopperB != null){
+            //same color score +1
+            if (maybeBallA.getColor() == maybeHopperB.getColor()){
+                level.updateScore(1)
+            } else {
+                level.gameOver()
             }
+            deleteBall(maybeBallA)
+        }
+        // if fixtureB belongs to a ball and fixtureA belongs to a hopper
+        else if ( maybeBallB != null && maybeHopperA != null){
+            //same color score +1
+            if (maybeBallB.getColor() == maybeHopperA.getColor()){
+                level.updateScore(1)
+            } else {
+                level.gameOver()
+            }
+            deleteBall(maybeBallB)
+        }
+        // if fixtureA belongs to a ball and fixtureB belongs to a destr border
+        else if (maybeBallA != null &&  maybeDestBorderB != null){
+            level.gameOver()
+            deleteBall(maybeBallA)
+        }
+        // if fixtureB belongs to a ball and fixtureA belongs to a destr border
+        else if (maybeBallB != null && maybeDestBorderA != null){
+            level.gameOver()
+            deleteBall(maybeBallB)
+        }
+    }
 
+    private fun deleteBall(ball : Ball?) {
+        // add ball to remove list
+        if (ball != null) {
+            // DON'T REMOVE DIRECT we are in a physics step: https://www.iforce2d.net/b2dtut/removing-bodies#:~:text=The%20actual%20code%20to%20remove,timestep%2C%20usually%20a%20collision%20callback.
+            if (!level.ballsToRemoveList.contains(ball)) {
+                level.ballsToRemoveList.add(ball)
+            }
         }
     }
 }
