@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 
 /** [com.badlogic.gdx.ApplicationListener] implementation shared by all platforms. */
 class ColorSortMainGame : ApplicationAdapter() {
-    // Camera and render
+    // camera and render
     private val camera : OrthographicCamera = OrthographicCamera()
     private val batch by lazy { SpriteBatch() }
     // world size, screen size, scaling
@@ -33,7 +33,7 @@ class ColorSortMainGame : ApplicationAdapter() {
     // debug render
     private val debugRenderer by lazy { Box2DDebugRenderer() }
     // input handler
-    lateinit var inputHandler: InputHandler
+    private lateinit var inputHandler: InputHandler
 
     /*
     ToDo clean code
@@ -62,7 +62,6 @@ class ColorSortMainGame : ApplicationAdapter() {
         font = BitmapFont()
         font.data.setScale(2f)
         // input handler
-        // init physics
         inputHandler = InputHandler(endlessMode)
         Gdx.input.inputProcessor = GestureDetector(inputHandler)
     }

@@ -12,7 +12,7 @@ class Level(levelDef: LevelDef)  {
     val hopperList : ArrayList<Hopper> = levelDef.hopperList
     private val obstacleList : ArrayList<Obstacle> = levelDef.obstacleList
 
-    private val spawner : Spawner = levelDef.spawner
+    val spawner : Spawner = levelDef.spawner
     private val dispatcherLeft: Dispatcher = levelDef.dispatcherLeft
     private val dispatcherRight: Dispatcher = levelDef.dispatcherRight
     val dispatcherController: DispatcherController = levelDef.dispatcherController
@@ -29,7 +29,7 @@ class Level(levelDef: LevelDef)  {
     private val gameOverScreen = levelDef.gameOverScreen
     private val pauseScreen = levelDef.pauseScreen
     // for ball spawning
-    private var lastSpawnTime : Long = 0
+    var lastSpawnTime : Long = 0
     // score
     private var score = 0
     private var highScore = 0
@@ -75,7 +75,7 @@ class Level(levelDef: LevelDef)  {
         }
         // for spawner
         textureDrawHelpers.add(TextureDrawHelper(spawner.getTexture(), spawner.getTexturePosition(), spawner.getTextureSize()))
-        // puse button
+        // pause button
         textureDrawHelpers.add(TextureDrawHelper(Texture("PauseButton80_80.png"), Vector2(37f, 77f), Vector2(2f,2f)))
         // for start screen
         if (gameState == GameState.STARTSCREEN){
@@ -92,10 +92,9 @@ class Level(levelDef: LevelDef)  {
     }
     private fun doStep () {
         // check if need to spawn new ball and do so
-        val currentTime : Long = TimeUtils.nanoTime()
         if (TimeUtils.timeSinceNanos(lastSpawnTime) > spawner.spawnInterval * 1_000_000_000L){
             ballsList.add(spawner.spawnBall())
-            lastSpawnTime = currentTime
+            lastSpawnTime = TimeUtils.nanoTime()
         }
         // step world
         world.step(1/60f,6,2)
@@ -127,14 +126,14 @@ class Level(levelDef: LevelDef)  {
     }
     fun updateScore (amount : Int){
         score += amount
-        println(score)
+    }
+    fun getScore () : Int {
+        return this.score
     }
     fun setHighScore (value : Int){
         highScore = value
     }
     fun gameOver() {
-        score = 0
-        dispatcherController.center()
         lastSpawnTime = TimeUtils.nanoTime()
         ballsToRemoveList.addAll(ballsList)
         gameState = GameState.GAMEOVER
