@@ -32,8 +32,8 @@ class Level(levelDef: LevelDef)  {
     // for ball spawning
     var lastSpawnTime : Long = 0
     // score
-    private var score = 0
-    private var highScore = 0
+    var score = 0
+    var highScore = 0
     // world dimensions
     private val worldWidth = levelDef.worldWidth
     private val worldHeight = levelDef.worldHeight
@@ -144,15 +144,6 @@ class Level(levelDef: LevelDef)  {
     }
     fun getWorld () : World {
         return this.world
-    }
-    fun updateScore (amount : Int){
-        score += amount
-    }
-    fun getScore () : Int {
-        return this.score
-    }
-    fun setHighScore (value : Int){
-        highScore = value
     }
     fun gameOver() {
         lastSpawnTime = TimeUtils.nanoTime()

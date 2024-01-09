@@ -25,7 +25,7 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
         }
         if (level.gameState == GameState.STARTSCREEN || level.gameState == GameState.GAMEOVER || level.gameState == GameState.PAUSED){
             if (level.gameState != GameState.PAUSED){
-                level.updateScore(- level.getScore())
+                level.score = 0
                 level.dispatcherController.center()
             }
             if (level.gameState == GameState.PAUSED){

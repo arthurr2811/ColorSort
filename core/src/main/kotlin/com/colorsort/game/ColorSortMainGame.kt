@@ -2,6 +2,7 @@ package com.colorsort.game
 
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
@@ -34,14 +35,13 @@ class ColorSortMainGame : ApplicationAdapter() {
     private val debugRenderer by lazy { Box2DDebugRenderer() }
     // input handler
     private lateinit var inputHandler: InputHandler
+    // shared preferences to persist high score
+    lateinit var preferences : Preferences
 
     /*
-    ToDo clean code
-    FiXme: Dispatcher reset on game over
     ToDO: find right physics settings for default endless mode (dispatcher closer together?)
-    ToDo: implement highscore
-
-    Ideas for later: menue, adjustable gamerules,
+    Ideas for later: sounds and music and ability to toggle off in start screen
+                     menue, adjustable gamerules,
                      implement different levels (not endless, Level class boolean endless).
      */
     // init everything
@@ -63,6 +63,9 @@ class ColorSortMainGame : ApplicationAdapter() {
         // input handler
         inputHandler = InputHandler(endlessMode)
         Gdx.input.inputProcessor = GestureDetector(inputHandler)
+        // load persistent high score from shared preferences
+        preferences = Gdx.app.getPreferences("ColorSortPreferences")
+        endlessMode.highScore = preferences.getInteger("highscore", 0)
     }
     // sizes camera to screen size
     override fun resize(width: Int, height: Int) {
@@ -90,7 +93,14 @@ class ColorSortMainGame : ApplicationAdapter() {
         }
         batch.end()
     }
+
+    override fun pause() {
+        endlessMode.gameState = GameState.PAUSED
+    }
     override fun dispose() {
+        // persistent high score
+        preferences.putInteger("highscore", endlessMode.highScore)
+        preferences.flush()
         // dispose textures
         endlessMode.dispose()
     }

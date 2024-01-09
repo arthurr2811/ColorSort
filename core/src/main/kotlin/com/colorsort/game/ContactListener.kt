@@ -51,7 +51,10 @@ class ContactListener (private val level: Level) : ContactListener {
         if (maybeBallA != null && maybeHopperB != null){
             //same color score +1
             if (maybeBallA.getColor() == maybeHopperB.getColor()){
-                level.updateScore(1)
+                level.score += 1
+                if (level.score > level.highScore){
+                    level.highScore = level.score
+                }
             } else {
                 level.gameOver()
             }
@@ -61,7 +64,10 @@ class ContactListener (private val level: Level) : ContactListener {
         else if ( maybeBallB != null && maybeHopperA != null){
             //same color score +1
             if (maybeBallB.getColor() == maybeHopperA.getColor()){
-                level.updateScore(1)
+                level.score += 1
+                if (level.score > level.highScore){
+                    level.highScore = level.score
+                }
             } else {
                 level.gameOver()
             }
