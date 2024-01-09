@@ -1,5 +1,6 @@
 package com.colorsort.game
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
@@ -33,6 +34,9 @@ class Level(levelDef: LevelDef)  {
     // score
     private var score = 0
     private var highScore = 0
+    // world dimensions
+    private val worldWidth = levelDef.worldWidth
+    private val worldHeight = levelDef.worldHeight
 
     init {
         world.setContactListener(contactListener)
@@ -43,8 +47,25 @@ class Level(levelDef: LevelDef)  {
         val texts = ArrayList<TextDrawHelper>()
         // draw score top center
         if (gameState != GameState.STARTSCREEN){
-            texts.add(TextDrawHelper("Score", Vector2(20f, 78f)))
-            texts.add(TextDrawHelper(score.toString(), Vector2(20f, 76f)))
+            texts.add(TextDrawHelper("Score", Vector2(worldWidth/2, 78f), Color.WHITE, 2f))
+            texts.add(TextDrawHelper(score.toString(), Vector2(worldWidth/2, 76f), Color.WHITE, 2f))
+        }
+        // draw score and highScore
+        if (gameState == GameState.GAMEOVER){
+            texts.add(TextDrawHelper("Score:", Vector2(worldWidth/2, 45f), Color.BLACK, 4f))
+            texts.add(TextDrawHelper(score.toString(), Vector2(worldWidth/2, 43f), Color.BLACK, 4f))
+            texts.add(TextDrawHelper("High Score:", Vector2(worldWidth/2, 39f), Color.BLACK, 4f))
+            texts.add(TextDrawHelper(highScore.toString(), Vector2(worldWidth/2, 37f), Color.BLACK, 4f))
+
+        }
+        // draw tutorial text at start of game
+        if (score == 0 && gameState == GameState.INGAME){
+            texts.add(TextDrawHelper("SWIPE TO MOVE THE TRIANGLES", Vector2(worldWidth/2, 45f), Color.BLACK, 4f))
+            texts.add(TextDrawHelper("<---->", Vector2(worldWidth/2, 41f), Color.BLACK, 4f))
+        }
+        if (gameState == GameState.STARTSCREEN){
+            texts.add(TextDrawHelper("High Score:", Vector2(worldWidth/2, 27f), Color.BLACK, 4f))
+            texts.add(TextDrawHelper(highScore.toString(), Vector2(worldWidth/2, 24f), Color.BLACK, 4f))
         }
         return texts
     }

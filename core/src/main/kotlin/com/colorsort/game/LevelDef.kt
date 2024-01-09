@@ -4,8 +4,8 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 // define a Level, has standard values for basic endless game, everything can be changed
 class LevelDef () {
-    private val worldWidth = 40f
-    private val worldHeight = 80f
+    val worldWidth = 40f
+    val worldHeight = 80f
 
     val ballsList : ArrayList<Ball> = ArrayList()
     val ballsToRemoveList : ArrayList <Ball> = ArrayList()

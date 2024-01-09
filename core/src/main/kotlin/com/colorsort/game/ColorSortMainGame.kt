@@ -60,7 +60,6 @@ class ColorSortMainGame : ApplicationAdapter() {
         batch.projectionMatrix = Matrix4().setToOrtho2D(0f, 0f, screenWidth, screenHeight)
         // font
         font = BitmapFont()
-        font.data.setScale(2f)
         // input handler
         inputHandler = InputHandler(endlessMode)
         Gdx.input.inputProcessor = GestureDetector(inputHandler)
@@ -85,6 +84,8 @@ class ColorSortMainGame : ApplicationAdapter() {
                 texturePosition.dimensions.x * scaleFactorX, texturePosition.dimensions.y * scaleFactorY)
         }
         for (text in endlessMode.getTexts()){
+            font.color = text.color
+            font.data.setScale(text.scale)
             font.draw(batch, text.text, text.position.x * scaleFactorX, text.position.y * scaleFactorY, 0f, Align.center, false)
         }
         batch.end()
