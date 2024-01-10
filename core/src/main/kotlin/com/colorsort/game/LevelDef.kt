@@ -33,10 +33,13 @@ class LevelDef () {
     var leftBorder : Border = Border(world, 0.1f, 80f, Vector2(0.05f, 40f))
     var rightBorder : Border = Border(world, 0.1f, 80f, Vector2(39.95f, 40f))
 
+    var soundVolume = 1f
     var gameOverSound = Gdx.audio.newSound(Gdx.files.internal("GameOverSound.mp3"))
     var ballCollissionSound = Gdx.audio.newSound(Gdx.files.internal("BallCollisionSound.mp3"))
     var scoreSound = Gdx.audio.newSound(Gdx.files.internal("ScoreSound.mp3"))
-    val music = Gdx.audio.newMusic(Gdx.files.internal("MainMusic.mp3"))
+    var music = Gdx.audio.newMusic(Gdx.files.internal("MainMusic.mp3"))
+    var playSound = true
+    var playMusic = true
     init {
         // init standard hopper setup (hopperList can of course be changed)
         val greenHopper = Hopper(GameColor.GREEN, world, worldWidth * 0.5f -2, 0f)

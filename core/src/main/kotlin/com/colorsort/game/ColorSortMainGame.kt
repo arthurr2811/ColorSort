@@ -40,7 +40,6 @@ class ColorSortMainGame : ApplicationAdapter() {
 
     /*
     ToDO: find right physics settings for default endless mode (dispatcher closer together?)
-    ToDo: sounds and music and ability to toggle off in start screen
     Ideas for later: menue, adjustable gamerules,
                      implement different levels (not endless, Level class boolean endless).
      */

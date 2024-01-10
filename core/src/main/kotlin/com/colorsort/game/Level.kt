@@ -1,5 +1,7 @@
 package com.colorsort.game
 
+import com.badlogic.gdx.audio.Music
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
@@ -38,14 +40,18 @@ class Level(levelDef: LevelDef)  {
     private val worldWidth = levelDef.worldWidth
     private val worldHeight = levelDef.worldHeight
     // sounds and music
-    var gameOverSound = levelDef.gameOverSound
-    var ballCollissionSound = levelDef.ballCollissionSound
-    var scoreSound = levelDef.scoreSound
-    val music = levelDef.music
+    var soundVolume = levelDef.soundVolume
+    var gameOverSound : Sound = levelDef.gameOverSound
+    var ballCollissionSound : Sound = levelDef.ballCollissionSound
+    var scoreSound : Sound = levelDef.scoreSound
+    val music : Music = levelDef.music
+    var playMusic = levelDef.playMusic
+    var playSound = levelDef.playSound
 
     init {
         world.setContactListener(contactListener)
         music.isLooping = true
+        music.volume = 0.5f
         music.play()
     }
 
@@ -107,7 +113,7 @@ class Level(levelDef: LevelDef)  {
         textureDrawHelpers.add(TextureDrawHelper(Texture("PauseButton80_80.png"), Vector2(37f, 77f), Vector2(2f,2f)))
         // for start screen
         if (gameState == GameState.STARTSCREEN){
-            textureDrawHelpers.add(TextureDrawHelper(startScreen.getTexture(), startScreen.getTexturePosition(), startScreen.getTextureSize()))
+            textureDrawHelpers.addAll(startScreen.getTexturePositions(playSound, playMusic))
         }
         if (gameState == GameState.GAMEOVER){
             textureDrawHelpers.add(TextureDrawHelper(gameOverScreen.getTexture(), gameOverScreen.getTexturePosition(), gameOverScreen.getTextureSize()))
@@ -160,5 +166,23 @@ class Level(levelDef: LevelDef)  {
         lastSpawnTime = TimeUtils.nanoTime()
         ballsToRemoveList.addAll(ballsList)
         gameState = GameState.GAMEOVER
+    }
+    fun soundOfOrOn() {
+        if (playSound){
+            soundVolume = 0f
+            playSound = false
+        } else {
+            soundVolume = 1f
+            playSound = true
+        }
+    }
+    fun musicOfOrOn() {
+        if (playMusic){
+            music.volume = 0f
+            playMusic = false
+        } else {
+            music.volume = 0.5f
+            playMusic = true
+        }
     }
 }

@@ -55,12 +55,12 @@ class ContactListener (private val level: Level) : ContactListener {
             //same color score +1
             if (maybeBallA.getColor() == maybeHopperB.getColor()){
                 level.score += 1
-                level.scoreSound.play()
+                level.scoreSound.play(level.soundVolume)
                 if (level.score > level.highScore){
                     level.highScore = level.score
                 }
             } else {
-                level.gameOverSound.play()
+                level.gameOverSound.play(level.soundVolume)
                 level.gameOver()
             }
             deleteBall(maybeBallA)
@@ -70,25 +70,25 @@ class ContactListener (private val level: Level) : ContactListener {
             //same color score +1
             if (maybeBallB.getColor() == maybeHopperA.getColor()){
                 level.score += 1
-                level.scoreSound.play()
+                level.scoreSound.play(level.soundVolume)
                 if (level.score > level.highScore){
                     level.highScore = level.score
                 }
             } else {
-                level.gameOverSound.play()
+                level.gameOverSound.play(level.soundVolume)
                 level.gameOver()
             }
             deleteBall(maybeBallB)
         }
         // if fixtureA belongs to a ball and fixtureB belongs to a destr border
         else if (maybeBallA != null &&  maybeDestBorderB != null){
-            level.gameOverSound.play()
+            level.gameOverSound.play(level.soundVolume)
             level.gameOver()
             deleteBall(maybeBallA)
         }
         // if fixtureB belongs to a ball and fixtureA belongs to a destr border
         else if (maybeBallB != null && maybeDestBorderA != null){
-            level.gameOverSound.play()
+            level.gameOverSound.play(level.soundVolume)
             level.gameOver()
             deleteBall(maybeBallB)
         }
@@ -96,7 +96,7 @@ class ContactListener (private val level: Level) : ContactListener {
         // don't play collision sound to frequently (max every 0.5 sec)
         else if (maybeBallA != null || maybeBallB != null){
             if (TimeUtils.nanoTime() - lastCollisionSoundPlayed > 500_000_000){
-                level.ballCollissionSound.play()
+                level.ballCollissionSound.play(level.soundVolume)
                 lastCollisionSoundPlayed = TimeUtils.nanoTime()
             }
 

@@ -24,6 +24,22 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
             level.gameState = GameState.PAUSED
             return true
         }
+        // if start screen and tap on sound icon change playSound
+        if (level.gameState == GameState.STARTSCREEN &&
+            x > (screenWidth - screenWidth * 0.8) && x < (screenWidth - screenWidth * 0.7) &&
+            y > (screenHeight - screenHeight * 0.25) && y < (screenHeight - screenHeight * 0.15)){
+            println("sound toggle")
+            level.soundOfOrOn()
+            return true
+        }
+        // same for music icon
+        if (level.gameState == GameState.STARTSCREEN &&
+            x > (screenWidth - screenWidth * 0.3) && x < (screenWidth - screenWidth * 0.2) &&
+            y > (screenHeight - screenHeight * 0.25) && y < (screenHeight - screenHeight * 0.15)){
+            println("music toggle")
+            level.musicOfOrOn()
+            return true
+        }
         // if tap anywhere and not in game: set to in game
         if (level.gameState == GameState.STARTSCREEN || level.gameState == GameState.GAMEOVER || level.gameState == GameState.PAUSED){
             // if was not paused before also reset score and dispatcher
