@@ -37,9 +37,16 @@ class Level(levelDef: LevelDef)  {
     // world dimensions
     private val worldWidth = levelDef.worldWidth
     private val worldHeight = levelDef.worldHeight
+    // sounds and music
+    var gameOverSound = levelDef.gameOverSound
+    var ballCollissionSound = levelDef.ballCollissionSound
+    var scoreSound = levelDef.scoreSound
+    val music = levelDef.music
 
     init {
         world.setContactListener(contactListener)
+        music.isLooping = true
+        music.play()
     }
 
     fun getTexts() : ArrayList<TextDrawHelper>{
@@ -141,6 +148,10 @@ class Level(levelDef: LevelDef)  {
         spawner.getTexture().dispose()
         dispatcherRight.getTexture().dispose()
         dispatcherLeft.getTexture().dispose()
+        gameOverSound.dispose()
+        ballCollissionSound.dispose()
+        scoreSound.dispose()
+        music.dispose()
     }
     fun getWorld () : World {
         return this.world

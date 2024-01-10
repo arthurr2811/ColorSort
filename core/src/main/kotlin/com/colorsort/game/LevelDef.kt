@@ -1,5 +1,6 @@
 package com.colorsort.game
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 // define a Level, has standard values for basic endless game, everything can be changed
@@ -31,6 +32,11 @@ class LevelDef () {
     var ground : DestroyingBorder = DestroyingBorder(world, Vector2(0f, 0f), Vector2(40f, 0f), Vector2(0f, 0.1f))
     var leftBorder : Border = Border(world, 0.1f, 80f, Vector2(0.05f, 40f))
     var rightBorder : Border = Border(world, 0.1f, 80f, Vector2(39.95f, 40f))
+
+    var gameOverSound = Gdx.audio.newSound(Gdx.files.internal("GameOverSound.mp3"))
+    var ballCollissionSound = Gdx.audio.newSound(Gdx.files.internal("BallCollisionSound.mp3"))
+    var scoreSound = Gdx.audio.newSound(Gdx.files.internal("ScoreSound.mp3"))
+    val music = Gdx.audio.newMusic(Gdx.files.internal("MainMusic.mp3"))
     init {
         // init standard hopper setup (hopperList can of course be changed)
         val greenHopper = Hopper(GameColor.GREEN, world, worldWidth * 0.5f -2, 0f)

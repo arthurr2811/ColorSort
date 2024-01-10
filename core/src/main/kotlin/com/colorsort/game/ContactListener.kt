@@ -5,8 +5,11 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse
 import com.badlogic.gdx.physics.box2d.ContactListener
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.Manifold
+import com.badlogic.gdx.utils.TimeUtils
+
 // whenever bodies collide contactListener functions are called
 class ContactListener (private val level: Level) : ContactListener {
+    private var lastCollisionSoundPlayed = 0L
     override fun beginContact(contact: Contact?) {
         val fixtureA = contact?.fixtureA
         val fixtureB = contact?.fixtureB
@@ -52,10 +55,12 @@ class ContactListener (private val level: Level) : ContactListener {
             //same color score +1
             if (maybeBallA.getColor() == maybeHopperB.getColor()){
                 level.score += 1
+                level.scoreSound.play()
                 if (level.score > level.highScore){
                     level.highScore = level.score
                 }
             } else {
+                level.gameOverSound.play()
                 level.gameOver()
             }
             deleteBall(maybeBallA)
@@ -65,23 +70,36 @@ class ContactListener (private val level: Level) : ContactListener {
             //same color score +1
             if (maybeBallB.getColor() == maybeHopperA.getColor()){
                 level.score += 1
+                level.scoreSound.play()
                 if (level.score > level.highScore){
                     level.highScore = level.score
                 }
             } else {
+                level.gameOverSound.play()
                 level.gameOver()
             }
             deleteBall(maybeBallB)
         }
         // if fixtureA belongs to a ball and fixtureB belongs to a destr border
         else if (maybeBallA != null &&  maybeDestBorderB != null){
+            level.gameOverSound.play()
             level.gameOver()
             deleteBall(maybeBallA)
         }
         // if fixtureB belongs to a ball and fixtureA belongs to a destr border
         else if (maybeBallB != null && maybeDestBorderA != null){
+            level.gameOverSound.play()
             level.gameOver()
             deleteBall(maybeBallB)
+        }
+        // if one or both is ball but no score and no game over play collision sound
+        // don't play collision sound to frequently (max every 0.5 sec)
+        else if (maybeBallA != null || maybeBallB != null){
+            if (TimeUtils.nanoTime() - lastCollisionSoundPlayed > 500_000_000){
+                level.ballCollissionSound.play()
+                lastCollisionSoundPlayed = TimeUtils.nanoTime()
+            }
+
         }
     }
 
