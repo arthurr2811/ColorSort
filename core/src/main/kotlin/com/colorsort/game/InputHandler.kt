@@ -18,16 +18,20 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
     }
     // process tap gesture corresponding to game state
     override fun tap(x: Float, y: Float, count: Int, button: Int): Boolean {
-        if (level.gameState == GameState.INGAME && x > (screenWidth - screenWidth * 0.1) && y < (screenHeight - screenHeight * 0.1)){
+       // if tap in top right corner and in game: set to pause game
+        if (level.gameState == GameState.INGAME && x > (screenWidth - screenWidth * 0.1) && y < (screenHeight * 0.1)){
             timeStampPaused = TimeUtils.nanoTime()
             level.gameState = GameState.PAUSED
             return true
         }
+        // if tap anywhere and not in game: set to in game
         if (level.gameState == GameState.STARTSCREEN || level.gameState == GameState.GAMEOVER || level.gameState == GameState.PAUSED){
+            // if was not paused before also reset score and dispatcher
             if (level.gameState != GameState.PAUSED){
                 level.score = 0
                 level.dispatcherController.center()
             }
+            // if was paused before: set to in game
             if (level.gameState == GameState.PAUSED){
                 // while game paused lastSpawnTime is not updated, but TimeUtils.nanoTime moves on so
                 // we need to manually update lastSpawnTime
