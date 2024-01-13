@@ -14,6 +14,11 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
             // *0.3 otherwise movements to large
             level.dispatcherController.moveDispatcher(deltaX * 0.3f)
         }
+        // if pan gesture in game over screen: back to start screen
+        // delay to avoid input player meant to do in game is caught here
+        if(level.gameState == GameState.GAMEOVER && TimeUtils.nanoTime() > level.lastSpawnTime + 1_000_000_000){
+            level.gameState = GameState.STARTSCREEN
+        }
         return true
     }
     // process tap gesture corresponding to game state
@@ -28,7 +33,6 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
         if (level.gameState == GameState.STARTSCREEN &&
             x > (screenWidth - screenWidth * 0.8) && x < (screenWidth - screenWidth * 0.7) &&
             y > (screenHeight - screenHeight * 0.25) && y < (screenHeight - screenHeight * 0.15)){
-            println("sound toggle")
             level.soundOfOrOn()
             return true
         }
@@ -36,7 +40,6 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
         if (level.gameState == GameState.STARTSCREEN &&
             x > (screenWidth - screenWidth * 0.3) && x < (screenWidth - screenWidth * 0.2) &&
             y > (screenHeight - screenHeight * 0.25) && y < (screenHeight - screenHeight * 0.15)){
-            println("music toggle")
             level.musicOfOrOn()
             return true
         }

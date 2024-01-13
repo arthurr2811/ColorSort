@@ -65,6 +65,8 @@ class ColorSortMainGame : ApplicationAdapter() {
         // load persistent high score from shared preferences
         preferences = Gdx.app.getPreferences("ColorSortPreferences")
         endlessMode.highScore = preferences.getInteger("highscore", 0)
+        // to get rid of lag at first time palying a sound
+        endlessMode.scoreSound.play()
     }
     // sizes camera to screen size
     override fun resize(width: Int, height: Int) {
