@@ -167,6 +167,7 @@ class Level(levelDef: LevelDef)  {
         return this.world
     }
     fun gameOver() {
+        spawner.spawnInterval = spawner.defaultSpawnInterval
         lastSpawnTime = TimeUtils.nanoTime()
         ballsToRemoveList.addAll(ballsList)
         gameState = GameState.GAMEOVER
