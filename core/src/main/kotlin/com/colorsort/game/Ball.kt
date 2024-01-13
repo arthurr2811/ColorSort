@@ -28,9 +28,9 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
             type = BodyDef.BodyType.DynamicBody
         }
         ballFixture = ballBody!!.circle(radius = 1f){// -> durchmesser also 2!
-            density = 0.5f
-            friction = 0.4f
-            restitution = 0.2f
+            density = 1f
+            friction = 1f
+            restitution = 0.3f
             disposeOfShape = true
         }
     }

@@ -54,11 +54,8 @@ class ContactListener (private val level: Level) : ContactListener {
         if (maybeBallA != null && maybeHopperB != null){
             //same color score +1
             if (maybeBallA.getColor() == maybeHopperB.getColor()){
-                level.score += 1
+                level.increaseScore(1)
                 level.scoreSound.play(level.soundVolume)
-                if (level.score > level.highScore){
-                    level.highScore = level.score
-                }
             } else {
                 level.gameOverSound.play(level.soundVolume)
                 level.gameOver()
@@ -69,11 +66,8 @@ class ContactListener (private val level: Level) : ContactListener {
         else if ( maybeBallB != null && maybeHopperA != null){
             //same color score +1
             if (maybeBallB.getColor() == maybeHopperA.getColor()){
-                level.score += 1
+                level.increaseScore(1)
                 level.scoreSound.play(level.soundVolume)
-                if (level.score > level.highScore){
-                    level.highScore = level.score
-                }
             } else {
                 level.gameOverSound.play(level.soundVolume)
                 level.gameOver()
@@ -82,14 +76,10 @@ class ContactListener (private val level: Level) : ContactListener {
         }
         // if fixtureA belongs to a ball and fixtureB belongs to a destr border
         else if (maybeBallA != null &&  maybeDestBorderB != null){
-            level.gameOverSound.play(level.soundVolume)
-            level.gameOver()
             deleteBall(maybeBallA)
         }
         // if fixtureB belongs to a ball and fixtureA belongs to a destr border
         else if (maybeBallB != null && maybeDestBorderA != null){
-            level.gameOverSound.play(level.soundVolume)
-            level.gameOver()
             deleteBall(maybeBallB)
         }
         // if one or both is ball but no score and no game over play collision sound

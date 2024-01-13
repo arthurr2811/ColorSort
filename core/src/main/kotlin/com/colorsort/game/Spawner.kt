@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.World
 import kotlin.random.Random
 // where the balls come from
-class Spawner (private val spawnPointX : Float, private val spawnPointY : Float, val spawnInterval : Float, private val world: World) : GameObject {
+class Spawner (private val spawnPointX : Float, private val spawnPointY : Float, var spawnInterval : Float, private val world: World) : GameObject {
     // texture
     private val spawnerTexture by lazy { Texture("Spawner160_240.png") }
     fun spawnBall (color: GameColor = GameColor.RANDOM) : Ball{

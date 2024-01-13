@@ -24,7 +24,8 @@ class LevelDef () {
     val pauseScreen = GamePause()
 
 
-    var spawner : Spawner = Spawner(worldWidth / 2, worldHeight - 5, 2f,world)
+    var spawner : Spawner = Spawner(worldWidth / 2, worldHeight - 5, 3.5f,world)
+    var increaseSpawnInterval = true;
     var dispatcherLeft: Dispatcher = Dispatcher(world, 11f, worldHeight - 32f, DispatcherOrientation.LEFT)
     var dispatcherRight: Dispatcher = Dispatcher(world, 21f, worldHeight - 32f, DispatcherOrientation.RIGHT)
     var dispatcherController: DispatcherController = DispatcherController(dispatcherLeft, dispatcherRight, 0.3f)

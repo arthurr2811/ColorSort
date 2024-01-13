@@ -16,6 +16,7 @@ class Level(levelDef: LevelDef)  {
     private val obstacleList : ArrayList<Obstacle> = levelDef.obstacleList
 
     val spawner : Spawner = levelDef.spawner
+    val increaseSpawnInterval = levelDef.increaseSpawnInterval
     private val dispatcherLeft: Dispatcher = levelDef.dispatcherLeft
     private val dispatcherRight: Dispatcher = levelDef.dispatcherRight
     val dispatcherController: DispatcherController = levelDef.dispatcherController
@@ -34,7 +35,7 @@ class Level(levelDef: LevelDef)  {
     // for ball spawning
     var lastSpawnTime : Long = 0
     // score
-    var score = 0
+    private var score = 0
     var highScore = 0
     // world dimensions
     private val worldWidth = levelDef.worldWidth
@@ -166,6 +167,22 @@ class Level(levelDef: LevelDef)  {
         lastSpawnTime = TimeUtils.nanoTime()
         ballsToRemoveList.addAll(ballsList)
         gameState = GameState.GAMEOVER
+        if (score > highScore){
+            highScore = score
+        }
+    }
+    fun increaseScore (amount : Int){
+        score += amount
+        // decrease spawn interval by 20%
+        if (score % 5 == 0 && increaseSpawnInterval){
+            spawner.spawnInterval *= 0.8f
+        }
+    }
+    fun resetScore() {
+        score = 0
+    }
+    fun getScore () : Int{
+        return score
     }
     fun soundOfOrOn() {
         if (playSound){
