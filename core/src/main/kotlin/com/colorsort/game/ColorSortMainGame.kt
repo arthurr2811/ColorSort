@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.math.Matrix4
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
@@ -32,14 +31,14 @@ class ColorSortMainGame : ApplicationAdapter() {
     // font
     lateinit var font : BitmapFont
     // debug render
-    private val debugRenderer by lazy { Box2DDebugRenderer() }
+   // private val debugRenderer by lazy { Box2DDebugRenderer() }
     // input handler
     private lateinit var inputHandler: InputHandler
     // shared preferences to persist high score
     lateinit var preferences : Preferences
 
     /*
-    ToDO: find right physics settings for default endless mode (dispatcher closer together?)
+    ToDO: clean up code
     Ideas for later: menue, adjustable gamerules,
                      implement different levels (not endless, Level class boolean endless).
      */
@@ -80,7 +79,7 @@ class ColorSortMainGame : ApplicationAdapter() {
         // update camera
         camera.update()
         // debug renderer
-        debugRenderer.render(endlessMode.getWorld(), camera.combined)
+       // debugRenderer.render(endlessMode.getWorld(), camera.combined)
         // draw on batch
         batch.begin()
         for (texturePosition in endlessMode.getNextTexturePositions()){

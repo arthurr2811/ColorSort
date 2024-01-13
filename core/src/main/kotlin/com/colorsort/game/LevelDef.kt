@@ -31,8 +31,8 @@ class LevelDef () {
     var dispatcherController: DispatcherController = DispatcherController(dispatcherLeft, dispatcherRight, 0.3f)
 
     var ground : DestroyingBorder = DestroyingBorder(world, Vector2(0f, 0f), Vector2(40f, 0f), Vector2(0f, 0.1f))
-    var leftBorder : Border = Border(world, 0.1f, 80f, Vector2(0.05f, 40f))
-    var rightBorder : Border = Border(world, 0.1f, 80f, Vector2(39.95f, 40f))
+    var leftBorder : Border = Border(world, 0.1f, 80f, Vector2(1f, 40f))
+    var rightBorder : Border = Border(world, 0.1f, 80f, Vector2(39f, 40f))
 
     var soundVolume = 1f
     var gameOverSound = Gdx.audio.newSound(Gdx.files.internal("GameOverSound.mp3"))

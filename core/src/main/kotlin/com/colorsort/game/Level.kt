@@ -112,6 +112,9 @@ class Level(levelDef: LevelDef)  {
         textureDrawHelpers.add(TextureDrawHelper(spawner.getTexture(), spawner.getTexturePosition(), spawner.getTextureSize()))
         // pause button
         textureDrawHelpers.add(TextureDrawHelper(Texture("PauseButton80_80.png"), Vector2(37f, 77f), Vector2(2f,2f)))
+        // for walls
+        textureDrawHelpers.add(TextureDrawHelper(leftBorder.getTexture(), leftBorder.getTexturePosition(), leftBorder.getTextureSize()))
+        textureDrawHelpers.add(TextureDrawHelper(rightBorder.getTexture(), rightBorder.getTexturePosition(), rightBorder.getTextureSize()))
         // for start screen
         if (gameState == GameState.STARTSCREEN){
             textureDrawHelpers.addAll(startScreen.getTexturePositions(playSound, playMusic))
