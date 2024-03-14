@@ -1,25 +1,8 @@
 {
     "logs": [
         {
-            "outputFile": "com.colorsort.game.android-mergeDebugResources-2:/values/values.xml",
+            "outputFile": "C:\\Users\\arthu\\.gradle\\daemon\\8.5\\com.colorsort.game.android-mergeDebugResources-2:\\values\\values.xml",
             "map": [
-                {
-                    "source": "C:\\Users\\arthu\\AndroidStudioProjects\\ColorSortNew\\android\\res\\values\\ic_launcher_background.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "56",
-                        "endOffsets": "107"
-                    },
-                    "to": {
-                        "startLines": "3",
-                        "startColumns": "4",
-                        "startOffsets": "111",
-                        "endColumns": "56",
-                        "endOffsets": "163"
-                    }
-                },
                 {
                     "source": "C:\\Users\\arthu\\AndroidStudioProjects\\ColorSortNew\\android\\res\\values\\color.xml",
                     "from": {
@@ -41,12 +24,12 @@
                         "endOffsets": "476"
                     },
                     "to": {
-                        "startLines": "5",
+                        "startLines": "4",
                         "startColumns": "4",
-                        "startOffsets": "216",
-                        "endLines": "12",
+                        "startOffsets": "159",
+                        "endLines": "11",
                         "endColumns": "12",
-                        "endOffsets": "676"
+                        "endOffsets": "619"
                     }
                 },
                 {
@@ -59,11 +42,64 @@
                         "endOffsets": "96"
                     },
                     "to": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "111",
+                        "endColumns": "47",
+                        "endOffsets": "154"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "com.colorsort.game.android-mergeDebugResources-2:/values/values.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\arthu\\AndroidStudioProjects\\ColorSortNew\\android\\res\\values\\color.xml",
+                    "from": {
+                        "startLines": "-1",
+                        "startColumns": "-1",
+                        "startOffsets": "-1"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "55",
+                        "endOffsets": "106"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\arthu\\AndroidStudioProjects\\ColorSortNew\\android\\res\\values\\styles.xml",
+                    "from": {
+                        "startLines": "-1",
+                        "startColumns": "-1",
+                        "startOffsets": "-1"
+                    },
+                    "to": {
                         "startLines": "4",
                         "startColumns": "4",
-                        "startOffsets": "168",
+                        "startOffsets": "159",
+                        "endLines": "11",
+                        "endColumns": "12",
+                        "endOffsets": "619"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\arthu\\AndroidStudioProjects\\ColorSortNew\\android\\res\\values\\strings.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "2",
+                        "startOffsets": "53",
+                        "endColumns": "45",
+                        "endOffsets": "96"
+                    },
+                    "to": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "111",
                         "endColumns": "47",
-                        "endOffsets": "211"
+                        "endOffsets": "154"
                     }
                 }
             ]
