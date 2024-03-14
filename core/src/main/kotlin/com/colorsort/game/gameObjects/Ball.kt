@@ -9,7 +9,9 @@ import com.badlogic.gdx.physics.box2d.World
 import ktx.box2d.body
 import ktx.box2d.circle
 import kotlin.random.Random
-// a ball of certain color
+/*
+a ball is a GameObject. It has a color, position and exists in a world (box2D)
+ */
 class Ball (private var color : GameColor = GameColor.RANDOM, world: World, private val positionX : Float, private val positionY : Float) :
     GameObject {
     // physics
@@ -62,8 +64,8 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
     }
     fun destroyBody(world: World){
         val bodyToDestroy = this.getBody()
+        // do not destroy body before setting ballBody null!
         this.ballBody = null
-        // do not destroy body before setting ball.Body null!
         if (bodyToDestroy != null){
             world.destroyBody(bodyToDestroy)
         }

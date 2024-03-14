@@ -6,7 +6,10 @@ import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.World
 import ktx.box2d.body
 import ktx.box2d.edge
-
+/*
+sits on the bottom and destroys balls when they are out of the game. Otherwise they would fall
+endlessly in the void. Basically line between start and end point. It exists in a world (box2D)
+ */
 class BallDestroyer(world: World, statPoint : Vector2, endPoint : Vector2, bodyPosition : Vector2) {
     private var borderBody : Body? = null
     private var borderFixture : Fixture? = null

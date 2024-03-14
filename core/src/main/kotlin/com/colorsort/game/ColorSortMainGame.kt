@@ -30,22 +30,24 @@ class ColorSortMainGame : ApplicationAdapter() {
     private lateinit var viewport: Viewport
     private var scaleFactorX = 0f
     private var scaleFactorY = 0f
-    // level endless mode
+    // endless mode
     private lateinit var endlessMode : Level
     // font
-    lateinit var font : BitmapFont
+    private lateinit var font : BitmapFont
     // debug render
    // private val debugRenderer by lazy { Box2DDebugRenderer() }
     // input handler
     private lateinit var inputHandler: InputHandler
     // shared preferences to persist high score
-    lateinit var preferences : Preferences
+    private lateinit var preferences : Preferences
 
     /*
-    ToDO: clean up code
-    Ideas for later: menue, adjustable gamerules,
-                     implement different levels (not endless, Level class boolean endless).
+    Ideas for later: menu, adjustable game rules,
+                     implement different levels (not endless, Level class boolean endless)
+                     implement in game currency and skins (collect coins by playing,
+                     buy skins, new levels etc. with coins)
      */
+
     // init everything
     override fun create() {
         // camera
@@ -53,7 +55,7 @@ class ColorSortMainGame : ApplicationAdapter() {
         // init endless mode
         val levelDef = LevelDef()
         endlessMode = Level(levelDef)
-        // set scale factors
+        // calculate scale factors (our world is 40x80,the devices screen has different solution)
         screenWidth = Gdx.graphics.width.toFloat()
         screenHeight = Gdx.graphics.height.toFloat()
         scaleFactorX = screenWidth / worldWidth
@@ -67,15 +69,13 @@ class ColorSortMainGame : ApplicationAdapter() {
         Gdx.input.inputProcessor = GestureDetector(inputHandler)
         // load persistent high score from shared preferences
         preferences = Gdx.app.getPreferences("ColorSortPreferences")
-        endlessMode.highScore = preferences.getInteger("highscore", 0)
-        // to get rid of lag at first time palying a sound
-        endlessMode.scoreSound.play()
+        endlessMode.setHighScore(preferences.getInteger("highscore", 0))
     }
     // sizes camera to screen size
     override fun resize(width: Int, height: Int) {
         viewport.update(width, height,true)
     }
-    // render everything
+    // render everything that needs to be rendered in the current frame
     override fun render() {
         // set background color to light grey
         Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1f)
@@ -83,8 +83,8 @@ class ColorSortMainGame : ApplicationAdapter() {
         // update camera
         camera.update()
         // debug renderer
-       // debugRenderer.render(endlessMode.getWorld(), camera.combined)
-        // draw on batch
+        // debugRenderer.render(endlessMode.getWorld(), camera.combined)
+        // draw everything on batch
         batch.begin()
         for (texturePosition in endlessMode.getNextTexturePositions()){
             batch.draw(texturePosition.texture, texturePosition.position.x * scaleFactorX, texturePosition.position.y * scaleFactorY,
@@ -97,15 +97,16 @@ class ColorSortMainGame : ApplicationAdapter() {
         }
         batch.end()
     }
-
+    // pause game, when app is put to pause by android
     override fun pause() {
         if(endlessMode.gameState == GameState.INGAME){
             endlessMode.gameState = GameState.PAUSED
         }
     }
+    // before app gets killed save high score and dispose textures
     override fun dispose() {
         // persistent high score
-        preferences.putInteger("highscore", endlessMode.highScore)
+        preferences.putInteger("highscore", endlessMode.getHighScore())
         preferences.flush()
         // dispose textures
         endlessMode.dispose()

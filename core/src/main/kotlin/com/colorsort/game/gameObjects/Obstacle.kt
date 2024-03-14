@@ -7,7 +7,9 @@ import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.World
 import ktx.box2d.body
 import ktx.box2d.polygon
-
+/*
+a passive triangle that deflects balls. It has a position and exists in a world (box2D)
+ */
 class Obstacle(world: World, private val positionX : Float, private val positionY : Float) :
     GameObject {
     private var obstacleBody : Body? = null

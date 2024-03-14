@@ -5,7 +5,9 @@ import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.utils.TimeUtils
 import com.colorsort.game.levels.Level
 import com.colorsort.game.screens.GameState
-
+/*
+handles player input
+ */
 class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
     var timeStampPaused : Long = 0
     val screenWidth = Gdx.graphics.width.toFloat()
@@ -47,12 +49,12 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
         }
         // if tap anywhere and not in game: set to in game
         if (level.gameState == GameState.STARTSCREEN || level.gameState == GameState.GAMEOVER || level.gameState == GameState.PAUSED){
-            // if was not paused before also reset score and dispatcher
+            // if not paused before also reset score and dispatcher
             if (level.gameState != GameState.PAUSED){
                 level.resetScore()
                 level.dispatcherController.center()
             }
-            // if was paused before: set to in game
+            // if paused before: set to in game
             if (level.gameState == GameState.PAUSED){
                 // while game paused lastSpawnTime is not updated, but TimeUtils.nanoTime moves on so
                 // we need to manually update lastSpawnTime

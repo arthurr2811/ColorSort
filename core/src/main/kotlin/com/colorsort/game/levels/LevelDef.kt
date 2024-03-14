@@ -13,14 +13,16 @@ import com.colorsort.game.gameObjects.GameColor
 import com.colorsort.game.gameObjects.Hopper
 import com.colorsort.game.gameObjects.Obstacle
 import com.colorsort.game.gameObjects.Spawner
-import com.colorsort.game.helpers.ContactListener
 import com.colorsort.game.screens.GameOverScreen
 import com.colorsort.game.screens.GamePause
 import com.colorsort.game.screens.GameState
 import com.colorsort.game.screens.StartScreen
 
-// define a Level, has standard values for basic endless game, everything can be changed
-class LevelDef () {
+/*
+ define a Level, has standard values for basic endless game, everything can be changed to freely
+ create a variety of levels
+ */
+class LevelDef {
     val worldWidth = 40f
     val worldHeight = 80f
 
@@ -32,7 +34,6 @@ class LevelDef () {
     val obstacleList : ArrayList<Obstacle> = ArrayList()
 
     var world : World = World(Vector2(0f,-9.8f), true)
-    var contactListener : ContactListener? = null
 
     var gameState = GameState.STARTSCREEN
     val gameOverScreen = GameOverScreen()
@@ -41,7 +42,7 @@ class LevelDef () {
 
 
     var spawner : Spawner = Spawner(worldWidth / 2, worldHeight - 5, 3.5f,world)
-    var increaseSpawnInterval = true;
+    var increaseSpawnInterval = true
     var dispatcherLeft: Dispatcher = Dispatcher(world, 11f, worldHeight - 32f, DispatcherOrientation.LEFT)
     var dispatcherRight: Dispatcher = Dispatcher(world, 21f, worldHeight - 32f, DispatcherOrientation.RIGHT)
     var dispatcherController: DispatcherController = DispatcherController(dispatcherLeft, dispatcherRight, 0.3f)
@@ -52,20 +53,20 @@ class LevelDef () {
 
     var soundVolume = 1f
     var gameOverSound = Gdx.audio.newSound(Gdx.files.internal("MusicAndSound/GameOverSound.mp3"))
-    var ballCollissionSound = Gdx.audio.newSound(Gdx.files.internal("MusicAndSound/BallCollisionSound.mp3"))
+    var ballCollisionSound = Gdx.audio.newSound(Gdx.files.internal("MusicAndSound/BallCollisionSound.mp3"))
     var scoreSound = Gdx.audio.newSound(Gdx.files.internal("MusicAndSound/ScoreSound.mp3"))
     var music = Gdx.audio.newMusic(Gdx.files.internal("MusicAndSound/MainMusic.mp3"))
     var playSound = true
     var playMusic = true
     init {
-        // init standard hopper setup (hopperList can of course be changed)
+        // init standard hopper setup, can be changed
         val greenHopper = Hopper(GameColor.GREEN, world, worldWidth * 0.5f -2, 0f)
         hopperList.add(greenHopper)
         val blueHopper = Hopper(GameColor.RED, world, worldWidth * 0.2f -2, 0f)
         hopperList.add(blueHopper)
         val redHopper = Hopper(GameColor.BLUE, world, worldWidth * 0.8f -2, 0f)
         hopperList.add(redHopper)
-        // init standard obstacle setup (obstacle List can of course be changed)
+        // init standard obstacle setup, can be changed
         val leftObstacle = Obstacle(world, worldWidth * 0.35f -2, worldHeight * 0.2f)
         obstacleList.add(leftObstacle)
         val rightObstacle = Obstacle(world, worldWidth * 0.65f -2, worldHeight * 0.2f)

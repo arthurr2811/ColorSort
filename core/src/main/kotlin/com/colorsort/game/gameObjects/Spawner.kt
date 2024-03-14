@@ -6,7 +6,10 @@ import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.World
 import kotlin.random.Random
-// where the balls come from
+/*
+spawns the balls. Has a spawn point, spawn interval and exists in a world (box2D). spawn interval is
+var so it can be changed in game to increase difficulty
+ */
 class Spawner (private val spawnPointX : Float, private val spawnPointY : Float, var spawnInterval : Float, private val world: World) :
     GameObject {
     val defaultSpawnInterval = spawnInterval

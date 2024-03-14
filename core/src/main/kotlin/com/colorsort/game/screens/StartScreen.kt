@@ -4,7 +4,9 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
 import com.colorsort.game.helpers.TextureDrawHelper
 
-// screen shown at start of game
+/*
+screen shown when app is started
+ */
 class StartScreen {
     private val startScreenTexture by lazy { Texture("Screens/StartScreen400_800.png") }
     private val soundOnTexture by lazy { Texture("ButtonsAndIcons/SoundOn240_240.png") }

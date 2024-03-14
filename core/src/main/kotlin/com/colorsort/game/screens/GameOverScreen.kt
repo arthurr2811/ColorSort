@@ -2,7 +2,9 @@ package com.colorsort.game.screens
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
-// what to render over current game when game over
+/*
+what to render over game when game over
+ */
 class GameOverScreen {
     private val gameOverScreenTexture by lazy { Texture("Screens/GameOver300_400.png") }
     fun getTexture(): Texture {

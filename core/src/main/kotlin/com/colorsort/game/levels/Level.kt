@@ -20,16 +20,19 @@ import com.colorsort.game.helpers.TextDrawHelper
 import com.colorsort.game.helpers.TextureDrawHelper
 import com.colorsort.game.screens.GameState
 
-// a level defined by given level definition
+/*
+a level defined by given level definition. The idea is to set up everything in a levelDef. A level
+Def can freely be adjusted. A level however cant be changed. It is defined by the given level def.
+ */
 class Level(levelDef: LevelDef)  {
-    // objects
+    // game objects
     val ballsList : ArrayList<Ball> = levelDef.ballsList
     val ballsToRemoveList : ArrayList <Ball> = levelDef.ballsToRemoveList
     val hopperList : ArrayList<Hopper> = levelDef.hopperList
     private val obstacleList : ArrayList<Obstacle> = levelDef.obstacleList
 
     val spawner : Spawner = levelDef.spawner
-    val increaseSpawnInterval = levelDef.increaseSpawnInterval
+    private val increaseSpawnInterval = levelDef.increaseSpawnInterval
     private val dispatcherLeft: Dispatcher = levelDef.dispatcherLeft
     private val dispatcherRight: Dispatcher = levelDef.dispatcherRight
     val dispatcherController: DispatcherController = levelDef.dispatcherController
@@ -49,18 +52,18 @@ class Level(levelDef: LevelDef)  {
     var lastSpawnTime : Long = 0
     // score
     private var score = 0
-    var highScore = 0
+    private var highScore = 0
     // world dimensions
     private val worldWidth = levelDef.worldWidth
     private val worldHeight = levelDef.worldHeight
     // sounds and music
     var soundVolume = levelDef.soundVolume
     var gameOverSound : Sound = levelDef.gameOverSound
-    var ballCollissionSound : Sound = levelDef.ballCollissionSound
+    var ballCollisionSound : Sound = levelDef.ballCollisionSound
     var scoreSound : Sound = levelDef.scoreSound
-    val music : Music = levelDef.music
-    var playMusic = levelDef.playMusic
-    var playSound = levelDef.playSound
+    private val music : Music = levelDef.music
+    private var playMusic = levelDef.playMusic
+    private var playSound = levelDef.playSound
 
     init {
         world.setContactListener(contactListener)
@@ -69,6 +72,7 @@ class Level(levelDef: LevelDef)  {
         music.play()
     }
 
+    // returns a List of TextDraw Helper containing every texts to be drawn and their position
     fun getTexts() : ArrayList<TextDrawHelper>{
         // draw score
         val texts = ArrayList<TextDrawHelper>()
@@ -97,7 +101,8 @@ class Level(levelDef: LevelDef)  {
         return texts
     }
 
-    // returns the textures, their position and scale, at next step.
+    // updates the world (so everything moves 1 step) and then returns a List of TextDraw Helper
+    // containing every textures to be drawn and their position.
     // 1 step is 1 iteration of the world (calculating all physics)
     fun getNextTexturePositions () : ArrayList<TextureDrawHelper> {
         if (gameState == GameState.INGAME){
@@ -142,7 +147,7 @@ class Level(levelDef: LevelDef)  {
         return textureDrawHelpers
     }
     private fun doStep () {
-        // check if need to spawn new ball and do so
+        // check if need to spawn new ball
         if (TimeUtils.timeSinceNanos(lastSpawnTime) > spawner.spawnInterval * 1_000_000_000L){
             ballsList.add(spawner.spawnBall())
             lastSpawnTime = TimeUtils.nanoTime()
@@ -172,7 +177,7 @@ class Level(levelDef: LevelDef)  {
         dispatcherRight.getTexture().dispose()
         dispatcherLeft.getTexture().dispose()
         gameOverSound.dispose()
-        ballCollissionSound.dispose()
+        ballCollisionSound.dispose()
         scoreSound.dispose()
         music.dispose()
     }
@@ -180,17 +185,25 @@ class Level(levelDef: LevelDef)  {
         return this.world
     }
     fun gameOver() {
+        // reset everything at game over
         spawner.spawnInterval = spawner.defaultSpawnInterval
         lastSpawnTime = TimeUtils.nanoTime()
         ballsToRemoveList.addAll(ballsList)
         gameState = GameState.GAMEOVER
         if (score > highScore){
+            // safe new high score
             highScore = score
         }
     }
+    fun getHighScore(): Int {
+        return highScore
+    }
+    fun setHighScore(highScore : Int){
+        this.highScore = highScore
+    }
     fun increaseScore (amount : Int){
         score += amount
-        // decrease spawn interval by 20%
+        // decrease spawn interval by 20% every 5 points to increase difficulty
         if (score % 5 == 0 && increaseSpawnInterval){
             spawner.spawnInterval *= 0.8f
         }

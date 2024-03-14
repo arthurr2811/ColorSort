@@ -7,7 +7,10 @@ import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.World
 import ktx.box2d.body
 import ktx.box2d.edge
-// where the balls should land
+/*
+tube-like objects, which collect the balls. If color of hopper and ball match a point is scored
+if not game over. It has a color, position and exists in a world (box2D)
+ */
 class Hopper(private var color : GameColor, world: World, private val positionX : Float, private val positionY : Float) :
     GameObject {
     // physics
@@ -18,7 +21,8 @@ class Hopper(private var color : GameColor, world: World, private val positionX 
     private val greenHopperTexture by lazy { Texture("Hoppers/GreenHopper200_240.png") }
     private val redHopperTexture by lazy { Texture("Hoppers/RedHopper200_240.png") }
     init {
-        // body is just a line on top of the hopper
+        // we can define the body just as a line on the hopper opening as we only need to check
+        // for collisions there
         hopperBody = world.body {
             position.set(positionX, positionY)
         }
@@ -36,7 +40,6 @@ class Hopper(private var color : GameColor, world: World, private val positionX 
             GameColor.RANDOM -> null
         }
     }
-    // edge fixtures dont have offset problem
     override fun getTexturePosition() : Vector2 {
         return Vector2(positionX, positionY)
     }
