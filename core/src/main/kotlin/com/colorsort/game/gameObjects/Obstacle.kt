@@ -1,4 +1,4 @@
-package com.colorsort.game
+package com.colorsort.game.gameObjects
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
@@ -8,7 +8,8 @@ import com.badlogic.gdx.physics.box2d.World
 import ktx.box2d.body
 import ktx.box2d.polygon
 
-class Obstacle(world: World, private val positionX : Float, private val positionY : Float) : GameObject {
+class Obstacle(world: World, private val positionX : Float, private val positionY : Float) :
+    GameObject {
     private var obstacleBody : Body? = null
     private var obstacleFixture : Fixture? = null
     private val obstacleTexture by lazy { Texture("Obstacle200_120.png") }

@@ -1,4 +1,4 @@
-package com.colorsort.game
+package com.colorsort.game.helpers
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2

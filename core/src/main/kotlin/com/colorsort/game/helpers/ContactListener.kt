@@ -1,4 +1,4 @@
-package com.colorsort.game
+package com.colorsort.game.helpers
 
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.ContactImpulse
@@ -6,6 +6,10 @@ import com.badlogic.gdx.physics.box2d.ContactListener
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.Manifold
 import com.badlogic.gdx.utils.TimeUtils
+import com.colorsort.game.gameObjects.Ball
+import com.colorsort.game.gameObjects.BallDestroyer
+import com.colorsort.game.gameObjects.Hopper
+import com.colorsort.game.levels.Level
 
 // whenever bodies collide contactListener functions are called
 class ContactListener (private val level: Level) : ContactListener {
@@ -33,7 +37,7 @@ class ContactListener (private val level: Level) : ContactListener {
     private fun findHopperFromFixture(fixture: Fixture?) : Hopper?{
         return level.hopperList.find { it.getFixture() == fixture }
     }
-    private fun findDestrBoarderFromFixture (fixture: Fixture?) : DestroyingBorder? {
+    private fun findDestrBoarderFromFixture (fixture: Fixture?) : BallDestroyer? {
         return if(fixture == level.ground.getFixture()){
             level.ground
         } else {

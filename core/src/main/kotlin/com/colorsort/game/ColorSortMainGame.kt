@@ -12,6 +12,10 @@ import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
+import com.colorsort.game.helpers.InputHandler
+import com.colorsort.game.levels.Level
+import com.colorsort.game.levels.LevelDef
+import com.colorsort.game.screens.GameState
 
 /** [com.badlogic.gdx.ApplicationListener] implementation shared by all platforms. */
 class ColorSortMainGame : ApplicationAdapter() {

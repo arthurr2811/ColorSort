@@ -1,14 +1,16 @@
-package com.colorsort.game
+package com.colorsort.game.screens
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
+import com.colorsort.game.helpers.TextureDrawHelper
+
 // screen shown at start of game
 class StartScreen {
-    private val startScreenTexture by lazy { Texture("StartScreen400_800.png") }
-    private val soundOnTexture by lazy { Texture("SoundOn240_240.png") }
-    private val soundOffTexture by lazy { Texture("SoundOff240_240.png") }
-    private val musicOnTexture by lazy { Texture("MusicOn240_240.png") }
-    private val musicOffTexture by lazy { Texture("MusicOff240_240.png") }
+    private val startScreenTexture by lazy { Texture("Screens/StartScreen400_800.png") }
+    private val soundOnTexture by lazy { Texture("ButtonsAndIcons/SoundOn240_240.png") }
+    private val soundOffTexture by lazy { Texture("ButtonsAndIcons/SoundOff240_240.png") }
+    private val musicOnTexture by lazy { Texture("ButtonsAndIcons/MusicOn240_240.png") }
+    private val musicOffTexture by lazy { Texture("ButtonsAndIcons/MusicOff240_240.png") }
 
     fun getTexturePositions (sound : Boolean, music : Boolean) : ArrayList<TextureDrawHelper> {
         val textureDrawHelpers = ArrayList<TextureDrawHelper>()

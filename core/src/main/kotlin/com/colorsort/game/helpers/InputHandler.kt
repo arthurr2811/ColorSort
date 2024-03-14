@@ -1,8 +1,10 @@
-package com.colorsort.game
+package com.colorsort.game.helpers
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.utils.TimeUtils
+import com.colorsort.game.levels.Level
+import com.colorsort.game.screens.GameState
 
 class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
     var timeStampPaused : Long = 0

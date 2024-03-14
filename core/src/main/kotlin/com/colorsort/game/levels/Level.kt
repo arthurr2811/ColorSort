@@ -1,4 +1,4 @@
-package com.colorsort.game
+package com.colorsort.game.levels
 
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
@@ -7,6 +7,19 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.TimeUtils
+import com.colorsort.game.gameObjects.Ball
+import com.colorsort.game.gameObjects.BallDestroyer
+import com.colorsort.game.gameObjects.Border
+import com.colorsort.game.gameObjects.Dispatcher
+import com.colorsort.game.gameObjects.DispatcherController
+import com.colorsort.game.gameObjects.Hopper
+import com.colorsort.game.gameObjects.Obstacle
+import com.colorsort.game.gameObjects.Spawner
+import com.colorsort.game.helpers.ContactListener
+import com.colorsort.game.helpers.TextDrawHelper
+import com.colorsort.game.helpers.TextureDrawHelper
+import com.colorsort.game.screens.GameState
+
 // a level defined by given level definition
 class Level(levelDef: LevelDef)  {
     // objects
@@ -21,7 +34,7 @@ class Level(levelDef: LevelDef)  {
     private val dispatcherRight: Dispatcher = levelDef.dispatcherRight
     val dispatcherController: DispatcherController = levelDef.dispatcherController
 
-    val ground : DestroyingBorder = levelDef.ground
+    val ground : BallDestroyer = levelDef.ground
     private val leftBorder : Border = levelDef.leftBorder
     private val rightBorder : Border = levelDef.rightBorder
     // world and collision
@@ -111,7 +124,7 @@ class Level(levelDef: LevelDef)  {
         // for spawner
         textureDrawHelpers.add(TextureDrawHelper(spawner.getTexture(), spawner.getTexturePosition(), spawner.getTextureSize()))
         // pause button
-        textureDrawHelpers.add(TextureDrawHelper(Texture("PauseButton80_80.png"), Vector2(37f, 77f), Vector2(2f,2f)))
+        textureDrawHelpers.add(TextureDrawHelper(Texture("ButtonsAndIcons/PauseButton80_80.png"), Vector2(37f, 77f), Vector2(2f,2f)))
         // for walls
         textureDrawHelpers.add(TextureDrawHelper(leftBorder.getTexture(), leftBorder.getTexturePosition(), leftBorder.getTextureSize()))
         textureDrawHelpers.add(TextureDrawHelper(rightBorder.getTexture(), rightBorder.getTexturePosition(), rightBorder.getTextureSize()))

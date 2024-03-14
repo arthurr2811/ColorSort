@@ -1,4 +1,4 @@
-package com.colorsort.game
+package com.colorsort.game.gameObjects
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
@@ -10,14 +10,15 @@ import ktx.box2d.body
 import ktx.box2d.circle
 import kotlin.random.Random
 // a ball of certain color
-class Ball (private var color : GameColor = GameColor.RANDOM, world: World, private val positionX : Float, private val positionY : Float) : GameObject {
+class Ball (private var color : GameColor = GameColor.RANDOM, world: World, private val positionX : Float, private val positionY : Float) :
+    GameObject {
     // physics
     private var ballBody : Body? = null
     private var ballFixture : Fixture? = null
     // textures
-    private val blueBallTexture by lazy { Texture("BlueBall80_80.png") }
-    private val greenBallTexture by lazy { Texture("GreenBall80_80.png") }
-    private val redBallTexture by lazy { Texture("RedBall80_80.png") }
+    private val blueBallTexture by lazy { Texture("Balls/BlueBall80_80.png") }
+    private val greenBallTexture by lazy { Texture("Balls/GreenBall80_80.png") }
+    private val redBallTexture by lazy { Texture("Balls/RedBall80_80.png") }
     init {
         if (color == GameColor.RANDOM){
             color = GameColor.entries[Random.nextInt(GameColor.entries.size - 1)]

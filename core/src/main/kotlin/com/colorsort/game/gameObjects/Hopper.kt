@@ -1,4 +1,4 @@
-package com.colorsort.game
+package com.colorsort.game.gameObjects
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
@@ -8,14 +8,15 @@ import com.badlogic.gdx.physics.box2d.World
 import ktx.box2d.body
 import ktx.box2d.edge
 // where the balls should land
-class Hopper(private var color : GameColor, world: World, private val positionX : Float, private val positionY : Float) : GameObject {
+class Hopper(private var color : GameColor, world: World, private val positionX : Float, private val positionY : Float) :
+    GameObject {
     // physics
     private var hopperBody : Body? = null
     private var hopperFixture : Fixture? = null
     // textures
-    private val blueHopperTexture by lazy { Texture("BlueHopper200_240.png") }
-    private val greenHopperTexture by lazy { Texture("GreenHopper200_240.png") }
-    private val redHopperTexture by lazy { Texture("RedHopper200_240.png") }
+    private val blueHopperTexture by lazy { Texture("Hoppers/BlueHopper200_240.png") }
+    private val greenHopperTexture by lazy { Texture("Hoppers/GreenHopper200_240.png") }
+    private val redHopperTexture by lazy { Texture("Hoppers/RedHopper200_240.png") }
     init {
         // body is just a line on top of the hopper
         hopperBody = world.body {

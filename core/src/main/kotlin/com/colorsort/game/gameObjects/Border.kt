@@ -1,4 +1,4 @@
-package com.colorsort.game
+package com.colorsort.game.gameObjects
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
@@ -8,7 +8,8 @@ import com.badlogic.gdx.physics.box2d.World
 import ktx.box2d.body
 import ktx.box2d.box
 
-class Border (world: World, private val width : Float, private val height : Float, private val bodyPosition : Vector2) : GameObject {
+class Border (world: World, private val width : Float, private val height : Float, private val bodyPosition : Vector2) :
+    GameObject {
     private var borderBody : Body? = null
     private var borderFixture : Fixture? = null
     private val borderTexture by lazy { Texture("Wall4_800.png") }

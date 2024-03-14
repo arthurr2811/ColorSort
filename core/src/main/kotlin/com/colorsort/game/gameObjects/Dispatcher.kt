@@ -1,4 +1,4 @@
-package com.colorsort.game
+package com.colorsort.game.gameObjects
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
@@ -9,11 +9,12 @@ import ktx.box2d.body
 import ktx.box2d.polygon
 // the object the player uses to control the game
 // build out of one dispatcherLeft and one DispatcherRight
-class Dispatcher (world: World, private val positionX : Float, private val positionY : Float, private val orientation: DispatcherOrientation) : GameObject {
+class Dispatcher (world: World, private val positionX : Float, private val positionY : Float, private val orientation: DispatcherOrientation) :
+    GameObject {
     private var dispatcherBody : Body? = null
     private var dispatcherFixture : Fixture? = null
-    private val dispatcherLeftTexture by lazy { Texture("DispatcherL280_200.png") }
-    private val dispatcherRightTexture by lazy { Texture("DispatcherR280_200.png") }
+    private val dispatcherLeftTexture by lazy { Texture("Dispatcher/DispatcherL280_200.png") }
+    private val dispatcherRightTexture by lazy { Texture("Dispatcher/DispatcherR280_200.png") }
     init {
         if (orientation == DispatcherOrientation.LEFT){
             dispatcherBody = world.body {

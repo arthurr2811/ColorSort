@@ -1,8 +1,24 @@
-package com.colorsort.game
+package com.colorsort.game.levels
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
+import com.colorsort.game.gameObjects.Ball
+import com.colorsort.game.gameObjects.BallDestroyer
+import com.colorsort.game.gameObjects.Border
+import com.colorsort.game.gameObjects.Dispatcher
+import com.colorsort.game.gameObjects.DispatcherController
+import com.colorsort.game.gameObjects.DispatcherOrientation
+import com.colorsort.game.gameObjects.GameColor
+import com.colorsort.game.gameObjects.Hopper
+import com.colorsort.game.gameObjects.Obstacle
+import com.colorsort.game.gameObjects.Spawner
+import com.colorsort.game.helpers.ContactListener
+import com.colorsort.game.screens.GameOverScreen
+import com.colorsort.game.screens.GamePause
+import com.colorsort.game.screens.GameState
+import com.colorsort.game.screens.StartScreen
+
 // define a Level, has standard values for basic endless game, everything can be changed
 class LevelDef () {
     val worldWidth = 40f
@@ -30,15 +46,15 @@ class LevelDef () {
     var dispatcherRight: Dispatcher = Dispatcher(world, 21f, worldHeight - 32f, DispatcherOrientation.RIGHT)
     var dispatcherController: DispatcherController = DispatcherController(dispatcherLeft, dispatcherRight, 0.3f)
 
-    var ground : DestroyingBorder = DestroyingBorder(world, Vector2(0f, 0f), Vector2(40f, 0f), Vector2(0f, 0.1f))
+    var ground : BallDestroyer = BallDestroyer(world, Vector2(0f, 0f), Vector2(40f, 0f), Vector2(0f, 0.1f))
     var leftBorder : Border = Border(world, 0.1f, 80f, Vector2(1f, 40f))
     var rightBorder : Border = Border(world, 0.1f, 80f, Vector2(39f, 40f))
 
     var soundVolume = 1f
-    var gameOverSound = Gdx.audio.newSound(Gdx.files.internal("GameOverSound.mp3"))
-    var ballCollissionSound = Gdx.audio.newSound(Gdx.files.internal("BallCollisionSound.mp3"))
-    var scoreSound = Gdx.audio.newSound(Gdx.files.internal("ScoreSound.mp3"))
-    var music = Gdx.audio.newMusic(Gdx.files.internal("MainMusic.mp3"))
+    var gameOverSound = Gdx.audio.newSound(Gdx.files.internal("MusicAndSound/GameOverSound.mp3"))
+    var ballCollissionSound = Gdx.audio.newSound(Gdx.files.internal("MusicAndSound/BallCollisionSound.mp3"))
+    var scoreSound = Gdx.audio.newSound(Gdx.files.internal("MusicAndSound/ScoreSound.mp3"))
+    var music = Gdx.audio.newMusic(Gdx.files.internal("MusicAndSound/MainMusic.mp3"))
     var playSound = true
     var playMusic = true
     init {

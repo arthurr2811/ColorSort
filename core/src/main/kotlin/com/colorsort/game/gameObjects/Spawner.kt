@@ -1,4 +1,4 @@
-package com.colorsort.game
+package com.colorsort.game.gameObjects
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
@@ -7,11 +7,12 @@ import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.World
 import kotlin.random.Random
 // where the balls come from
-class Spawner (private val spawnPointX : Float, private val spawnPointY : Float, var spawnInterval : Float, private val world: World) : GameObject {
+class Spawner (private val spawnPointX : Float, private val spawnPointY : Float, var spawnInterval : Float, private val world: World) :
+    GameObject {
     val defaultSpawnInterval = spawnInterval
     // texture
     private val spawnerTexture by lazy { Texture("Spawner160_240.png") }
-    fun spawnBall (color: GameColor = GameColor.RANDOM) : Ball{
+    fun spawnBall (color: GameColor = GameColor.RANDOM) : Ball {
         val realColor = if (color == GameColor.RANDOM) {
             GameColor.entries[Random.nextInt(GameColor.entries.size - 1)]
         } else {
