@@ -1,3 +1,65 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+# Kotlin und Java spezifisch
+*.class
+*.jar
+*.war
+*.ear
+
+# Build-Ordner
+/build/
+*/build/
+
+# Gradle spezifisch
+.gradle/
+build/
+**/build/
+**/*.bin
+**/*.tap
+
+# Android spezifisch
+/captures/
+.externalNativeBuild/
+
+# IntelliJ IDEA / Android Studio spezifisch
+.idea/
+.idea/*
+
+# User-spezifische Dateien
+*.iml
+*.hprof
+.idea/workspace.xml
+.idea/libraries
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/assetWizardSettings.xml
+.idea/dictionaries
+.idea/misc.xml
+.idea/modules.xml
+
+# Mac spezifisch
+.DS_Store
+
+# Windows spezifisch
+Thumbs.db
+
+# Lokale Konfiguration
+local.properties
+*.log
+
+# Google Services (Firebase etc.)
+/google-services.json
+/firebase/
+
+# Sonstige IDE-Dateien
+*.ipr
+*.iws
+*.idea/
+*.sublime-workspace
+*.sublime-project
+*.vscode/
+
+# Android Emulator und Profiler
+*.android/
+
