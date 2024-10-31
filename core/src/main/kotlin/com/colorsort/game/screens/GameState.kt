@@ -1,5 +1,5 @@
 package com.colorsort.game.screens
 
 enum class GameState {
-    STARTSCREEN, INGAME, PAUSED, GAMEOVER
+    STARTSCREEN, INGAME, PAUSED, GAMEOVER, SETTINGS
 }
