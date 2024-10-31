@@ -42,6 +42,8 @@ class LevelDef {
     val pauseScreen = GamePause()
     val settingsScreen = SettingsScreen()
 
+    val interactionMethod = InteractionMethod.INDIRECT_SWIPE
+
 
     var spawner : Spawner = Spawner(worldWidth / 2, worldHeight - 5, 3.5f,world)
     var increaseSpawnInterval = true

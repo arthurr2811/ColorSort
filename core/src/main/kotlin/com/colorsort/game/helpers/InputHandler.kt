@@ -14,9 +14,9 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
     val screenHeight = Gdx.graphics.height.toFloat()
     // if pan gesture and game state = in game -> move dispatcher
     override fun pan(x: Float, y: Float, deltaX: Float, deltaY: Float): Boolean {
+        // hand input over to level
         if (level.gameState == GameState.INGAME){
-            // *0.3 otherwise movements to large
-            level.dispatcherController.moveDispatcher(deltaX * 0.3f)
+            level.handlePlayerInput(x, y, deltaX, deltaY)
         }
         // if pan gesture in game over or settings screen: back to start screen
         // delay to avoid input player meant to do in game is caught here
@@ -32,6 +32,10 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
         if (level.gameState == GameState.INGAME && x > (screenWidth - screenWidth * 0.1) && y < (screenHeight * 0.1)){
             timeStampPaused = TimeUtils.nanoTime()
             level.gameState = GameState.PAUSED
+            return true
+            // else hand input over to level
+        } else if(level.gameState == GameState.INGAME){
+            level.handlePlayerInput(x, y, null, null)
             return true
         }
         // if start screen and tap on sound icon change playSound
@@ -51,6 +55,10 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
         // tap on settings icon, go to settings
         if (level.gameState == GameState.STARTSCREEN && x < (screenWidth * 0.18) && y < (screenHeight * 0.15)){
             level.gameState = GameState.SETTINGS
+        }
+        // if tap anywhere and in settings: delegate to settings input handling
+        if (level.gameState == GameState.SETTINGS){
+            level.inputToSettingsMenu(x, y)
         }
         // if tap anywhere and not in game: set to in game
         if (level.gameState == GameState.STARTSCREEN || level.gameState == GameState.GAMEOVER || level.gameState == GameState.PAUSED){

@@ -41,6 +41,10 @@ class ColorSortMainGame : ApplicationAdapter() {
     // shared preferences to persist high score
     private lateinit var preferences : Preferences
 
+    // ToDo general:
+    // implement settings: reset highscore and setInteractionMethod Buttons
+    // implement 3 interaction methods for one movable object (the dispatcher)
+    // implement expand 3 interaction methods for also movable obstacles
     /*
     Ideas for later: menu, adjustable game rules,
                      implement different levels (not endless, Level class boolean endless)

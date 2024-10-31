@@ -49,6 +49,8 @@ class Level(levelDef: LevelDef)  {
     private val gameOverScreen = levelDef.gameOverScreen
     private val pauseScreen = levelDef.pauseScreen
     private val settingsScreen = levelDef.settingsScreen
+    // interaction method
+    private var interactionMethod = levelDef.interactionMethod
     // for ball spawning
     var lastSpawnTime : Long = 0
     // score
@@ -71,6 +73,7 @@ class Level(levelDef: LevelDef)  {
         music.isLooping = true
         music.volume = 0.5f
         music.play()
+        settingsScreen.level = this
     }
 
     // returns a List of TextDraw Helper containing every texts to be drawn and their position
@@ -78,7 +81,7 @@ class Level(levelDef: LevelDef)  {
         // draw score
         val texts = ArrayList<TextDrawHelper>()
         // draw score top center
-        if (gameState != GameState.STARTSCREEN){
+        if (gameState != GameState.STARTSCREEN && gameState!= GameState.SETTINGS){
             texts.add(TextDrawHelper("Score", Vector2(worldWidth/2, 78f), Color.WHITE, 2f))
             texts.add(TextDrawHelper(score.toString(), Vector2(worldWidth/2, 76f), Color.WHITE, 2f))
         }
@@ -149,6 +152,32 @@ class Level(levelDef: LevelDef)  {
         }
 
         return textureDrawHelpers
+    }
+    // ToDo handle input method: decides based on interaction method, what to do
+    fun handlePlayerInput(x: Float, y: Float, deltaX: Float?, deltaY : Float?){
+        // decide based on interactionMOde what to do with input
+        if (deltaX != null && deltaY != null){
+            when(interactionMethod){
+                InteractionMethod.DIRECT -> handleDirectInteraction(x, y, deltaX,deltaY)
+                InteractionMethod.INDIRECT_TAP -> handleIndirectTapInteraction(deltaX,null, null)
+                InteractionMethod.INDIRECT_SWIPE -> handleIndirectSwipeInteraction(deltaX,deltaY)
+            }
+        } else if (interactionMethod == InteractionMethod.INDIRECT_TAP){
+            handleIndirectTapInteraction(null, null, x)
+        }
+
+    }
+    private fun handleDirectInteraction(x : Float, y : Float, deltaX : Float, deltaY: Float){
+        // check ob swipe auf dispatcher gestartet hat, wenn ja move, sonst nichts tun
+    }
+    private fun handleIndirectTapInteraction(deltaX : Float?, x: Float?, y: Float?){
+        // wenn nur x, y ,dann war es ein auswählendes tap: ändere ziel (später bei mehreren hindernissen)
+        // wenn nur deltaX: dann war es ein swipe: entsprechend durchführen
+    }
+    private fun handleIndirectSwipeInteraction(deltaX : Float, deltaY: Float){
+        // falls später mehrere hindernisse gesteuert: check ob eher x oder y swipe
+        // falls x aktuell ausgewähltes bewegen, eher y: eins drüber oder drunter auswählen
+        dispatcherController.moveDispatcher(deltaX * 0.3f)
     }
     private fun doStep () {
         // check if need to spawn new ball
@@ -235,5 +264,11 @@ class Level(levelDef: LevelDef)  {
             music.volume = 0.5f
             playMusic = true
         }
+    }
+    fun setInteractionMethod (interactionMethod: InteractionMethod){
+        this.interactionMethod = interactionMethod
+    }
+    fun inputToSettingsMenu(x : Float, y : Float){
+        settingsScreen.handleTouchInput(x, y)
     }
 }
