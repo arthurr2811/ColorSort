@@ -48,6 +48,10 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
             level.musicOfOrOn()
             return true
         }
+        // tap on settings icon, go to settings
+        if (level.gameState == GameState.STARTSCREEN && x < (screenWidth * 0.18) && y < (screenHeight * 0.15)){
+            level.gameState = GameState.SETTINGS
+        }
         // if tap anywhere and not in game: set to in game
         if (level.gameState == GameState.STARTSCREEN || level.gameState == GameState.GAMEOVER || level.gameState == GameState.PAUSED){
             // if not paused before also reset score and dispatcher

@@ -16,6 +16,7 @@ import com.colorsort.game.gameObjects.Spawner
 import com.colorsort.game.screens.GameOverScreen
 import com.colorsort.game.screens.GamePause
 import com.colorsort.game.screens.GameState
+import com.colorsort.game.screens.SettingsScreen
 import com.colorsort.game.screens.StartScreen
 
 /*
@@ -39,6 +40,7 @@ class LevelDef {
     val gameOverScreen = GameOverScreen()
     val startScreen = StartScreen()
     val pauseScreen = GamePause()
+    val settingsScreen = SettingsScreen()
 
 
     var spawner : Spawner = Spawner(worldWidth / 2, worldHeight - 5, 3.5f,world)

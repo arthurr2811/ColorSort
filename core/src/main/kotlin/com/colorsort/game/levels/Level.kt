@@ -48,6 +48,7 @@ class Level(levelDef: LevelDef)  {
     private val startScreen = levelDef.startScreen
     private val gameOverScreen = levelDef.gameOverScreen
     private val pauseScreen = levelDef.pauseScreen
+    private val settingsScreen = levelDef.settingsScreen
     // for ball spawning
     var lastSpawnTime : Long = 0
     // score
@@ -142,6 +143,9 @@ class Level(levelDef: LevelDef)  {
         }
         if (gameState == GameState.PAUSED){
             textureDrawHelpers.add(TextureDrawHelper(pauseScreen.getTexture(), pauseScreen.getTexturePosition(), pauseScreen.getTextureSize()))
+        }
+        if (gameState == GameState.SETTINGS){
+            textureDrawHelpers.addAll(settingsScreen.getTexturePositions())
         }
 
         return textureDrawHelpers
