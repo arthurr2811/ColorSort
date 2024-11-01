@@ -42,9 +42,9 @@ class ColorSortMainGame : ApplicationAdapter() {
     private lateinit var preferences : Preferences
 
     // ToDo general:
-    // implement settings: reset highscore and setInteractionMethod Buttons
-    // implement 3 interaction methods for one movable object (the dispatcher)
-    // implement expand 3 interaction methods for also movable obstacles
+    // 1) implement settings: reset highscore and setInteractionMethod Buttons
+    // 2) implement 3 interaction methods for one movable object (the dispatcher)
+    // 3) implement expand 3 interaction methods for also movable obstacles
     /*
     Ideas for later: menu, adjustable game rules,
                      implement different levels (not endless, Level class boolean endless)

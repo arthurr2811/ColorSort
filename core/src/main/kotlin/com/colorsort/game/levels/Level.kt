@@ -148,7 +148,7 @@ class Level(levelDef: LevelDef)  {
             textureDrawHelpers.add(TextureDrawHelper(pauseScreen.getTexture(), pauseScreen.getTexturePosition(), pauseScreen.getTextureSize()))
         }
         if (gameState == GameState.SETTINGS){
-            textureDrawHelpers.addAll(settingsScreen.getTexturePositions())
+            textureDrawHelpers.addAll(settingsScreen.getTexturePositions(interactionMethod))
         }
 
         return textureDrawHelpers
