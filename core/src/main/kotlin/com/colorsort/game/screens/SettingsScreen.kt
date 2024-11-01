@@ -1,5 +1,6 @@
 package com.colorsort.game.screens
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
 import com.colorsort.game.helpers.TextureDrawHelper
@@ -50,7 +51,28 @@ class SettingsScreen() {
         return textureDrawHelpers
     }
     fun handleTouchInput(x: Float, y: Float){
-        // ToDO je nachdem wo entspr. auslösen: reset Highscore oder set interactiopnMEthod
+        val screenWidth = Gdx.graphics.width.toFloat()
+        val screenHeight = Gdx.graphics.height.toFloat()
+        if (x > screenWidth * 0.25 && x < screenWidth * 0.75
+            && y > screenHeight * 0.8 && y < screenHeight * 0.85){
+            resetHighScore()
+            return
+        }
+        // x same for all interaction method buttons
+        if (x > screenWidth * 0.3 && x < screenWidth * 0.7){
+            if (y > screenHeight * 0.32 && y < screenHeight * 0.37){
+                setInteractionMethod(InteractionMethod.DIRECT)
+                return
+            }
+            if (y > screenHeight * 0.45 && y < screenHeight * 0.5){
+                setInteractionMethod(InteractionMethod.INDIRECT_TAP)
+                return
+            }
+            if (y > screenHeight * 0.57 && y < screenHeight * 0.62){
+                setInteractionMethod(InteractionMethod.INDIRECT_SWIPE)
+                return
+            }
+        }
     }
     private fun resetHighScore(){
         level.setHighScore(0)
