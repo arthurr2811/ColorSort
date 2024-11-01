@@ -49,7 +49,7 @@ class LevelDef {
     var increaseSpawnInterval = true
     var dispatcherLeft: Dispatcher = Dispatcher(world, 11f, worldHeight - 32f, DispatcherOrientation.LEFT)
     var dispatcherRight: Dispatcher = Dispatcher(world, 21f, worldHeight - 32f, DispatcherOrientation.RIGHT)
-    var dispatcherController: DispatcherController = DispatcherController(dispatcherLeft, dispatcherRight, 0.3f)
+    var dispatcherController: DispatcherController = DispatcherController(dispatcherLeft, dispatcherRight, 1f)
 
     var ground : BallDestroyer = BallDestroyer(world, Vector2(0f, 0f), Vector2(40f, 0f), Vector2(0f, 0.1f))
     var leftBorder : Border = Border(world, 0.1f, 80f, Vector2(1f, 40f))

@@ -12,11 +12,15 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
     var timeStampPaused : Long = 0
     val screenWidth = Gdx.graphics.width.toFloat()
     val screenHeight = Gdx.graphics.height.toFloat()
+    // scale input to world lengths
+    val scaleFactorX = level.worldWidth / screenWidth
+    val scaleFactorY = level.worldHeight / screenHeight
     // if pan gesture and game state = in game -> move dispatcher
     override fun pan(x: Float, y: Float, deltaX: Float, deltaY: Float): Boolean {
-        // hand input over to level
+        // hand input over to level, scale to world dimensions
         if (level.gameState == GameState.INGAME){
-            level.handlePlayerInput(x, y, deltaX, deltaY)
+            level.handlePlayerInput(x * scaleFactorX, y * scaleFactorY,
+                deltaX * scaleFactorX, deltaY * scaleFactorY)
         }
         // if pan gesture in game over or settings screen: back to start screen
         // delay to avoid input player meant to do in game is caught here
@@ -35,7 +39,7 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
             return true
             // else hand input over to level
         } else if(level.gameState == GameState.INGAME){
-            level.handlePlayerInput(x, y, null, null)
+            level.handlePlayerInput(x * scaleFactorX, y * scaleFactorY, null, null)
             return true
         }
         // if start screen and tap on sound icon change playSound

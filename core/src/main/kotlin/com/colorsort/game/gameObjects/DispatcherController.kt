@@ -10,6 +10,7 @@ class DispatcherController(private val dispatcherLeft: Dispatcher, private val d
             sensitivity = 1f
         }
     }
+    // ToDo: add move obstacles funtion
     fun moveDispatcher(deltaX: Float){
         // we only move the left dispatcher, the right one is just fixed 10f more to the right
         val currentPositionDispLeft = dispatcherLeft.getBody()!!.position
@@ -30,5 +31,10 @@ class DispatcherController(private val dispatcherLeft: Dispatcher, private val d
     fun center() {
         dispatcherLeft.getBody()!!.setTransform(Vector2(11f, 48f), 0f)
         dispatcherRight.getBody()!!.setTransform(Vector2(21f, 48f), 0f)
+    }
+    fun getDispatcherPosition() : Vector2{
+        // returns center of current dispatcher in the world
+        val positionLeftDispatcher = dispatcherLeft.getBody()!!.position
+        return Vector2(positionLeftDispatcher.x + 9f, positionLeftDispatcher.y -18f)
     }
 }

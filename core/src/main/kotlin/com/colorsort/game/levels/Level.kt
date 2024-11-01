@@ -57,8 +57,8 @@ class Level(levelDef: LevelDef)  {
     private var score = 0
     private var highScore = 0
     // world dimensions
-    private val worldWidth = levelDef.worldWidth
-    private val worldHeight = levelDef.worldHeight
+    val worldWidth = levelDef.worldWidth
+    val worldHeight = levelDef.worldHeight
     // sounds and music
     var soundVolume = levelDef.soundVolume
     var gameOverSound : Sound = levelDef.gameOverSound
@@ -153,7 +153,8 @@ class Level(levelDef: LevelDef)  {
 
         return textureDrawHelpers
     }
-    // ToDo handle input method: decides based on interaction method, what to do
+    // ToDo add selectedObject, which is either dispatcher or bottom obstacles: input updates selectedObject if necessary
+    //  and then moves selectedObject (add obstacleController)
     fun handlePlayerInput(x: Float, y: Float, deltaX: Float?, deltaY : Float?){
         // decide based on interactionMOde what to do with input
         if (deltaX != null && deltaY != null){
@@ -168,16 +169,27 @@ class Level(levelDef: LevelDef)  {
 
     }
     private fun handleDirectInteraction(x : Float, y : Float, deltaX : Float, deltaY: Float){
-        // check ob swipe auf dispatcher gestartet hat, wenn ja move, sonst nichts tun
+        val xMargin = 7 // as dispatcher is 15 long
+        val yMargin = 4 // as dispatcher is 5 high
+
+        val dispatcherPosition = dispatcherController.getDispatcherPosition()
+        // if player taped somewhere near dispatcher center, move dispatcher
+        if (x > dispatcherPosition.x - xMargin && x < dispatcherPosition.x + xMargin
+            && y > dispatcherPosition.y - yMargin && y < dispatcherPosition.y + yMargin){
+            dispatcherController.moveDispatcher(deltaX)
+        }
+        // ToDo: handle objectSelection, move bottom obstacles, if tapped there
     }
     private fun handleIndirectTapInteraction(deltaX : Float?, x: Float?, y: Float?){
-        // wenn nur x, y ,dann war es ein auswählendes tap: ändere ziel (später bei mehreren hindernissen)
-        // wenn nur deltaX: dann war es ein swipe: entsprechend durchführen
+        // ToDo: if only x,y: it was objectSelection INput, select correspondingly dispatcher or obstacles
+        //  if only deltaX it was movement: move selectedObject
     }
     private fun handleIndirectSwipeInteraction(deltaX : Float, deltaY: Float){
         // falls später mehrere hindernisse gesteuert: check ob eher x oder y swipe
         // falls x aktuell ausgewähltes bewegen, eher y: eins drüber oder drunter auswählen
-        dispatcherController.moveDispatcher(deltaX * 0.3f)
+        dispatcherController.moveDispatcher(deltaX)
+        // ToDo add objectSelection with deltaY swipes, delta xSwipes move the selectedObject
+        // etwa so: if(deltax < schwellenwert && delta y >deltx * 3) dann ganz klar ein swipe um anders zu steuern
     }
     private fun doStep () {
         // check if need to spawn new ball
