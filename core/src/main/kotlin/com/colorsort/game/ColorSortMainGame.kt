@@ -42,11 +42,9 @@ class ColorSortMainGame : ApplicationAdapter() {
     private lateinit var preferences : Preferences
 
     // ToDo general:
-    // 1) texture for dispatcher not selected and obstacles selected (selected: grey, not selected: black)
-    // 2) implement movable obstacles: dispatcher controller -> general controller:add moveObstacles method
-    // 3) implement interactionMethods correspondingly
-    // 4) fix highscore reset persistens, add settings persistenz (sound, music iteraction method)
-    // 5) polish, clean up
+    // 1) implement missing 2 interactionMethods
+    // 2) fix highscore reset persistens, add settings persistenz (sound, music iteraction method)
+    // 3) polish, clean up
     /*
     Ideas for later: menu, adjustable game rules,
                      implement different levels (not endless, Level class boolean endless)

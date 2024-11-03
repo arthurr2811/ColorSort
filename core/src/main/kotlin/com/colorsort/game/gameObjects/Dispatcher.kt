@@ -16,6 +16,9 @@ class Dispatcher (world: World, private val positionX : Float, private val posit
     GameObject {
     private var dispatcherBody : Body? = null
     private var dispatcherFixture : Fixture? = null
+    private var selected : Boolean = true
+    private val dispatcherLeftSelectTexture by lazy { Texture("Dispatcher/DispatcherLSelect280_200.png") }
+    private val dispatcherRightSelectTexture by lazy { Texture("Dispatcher/DispatcherRSelect280_200.png") }
     private val dispatcherLeftTexture by lazy { Texture("Dispatcher/DispatcherL280_200.png") }
     private val dispatcherRightTexture by lazy { Texture("Dispatcher/DispatcherR280_200.png") }
     init {
@@ -34,10 +37,18 @@ class Dispatcher (world: World, private val positionX : Float, private val posit
         }
     }
     override fun getTexture () : Texture {
-        return if (orientation == DispatcherOrientation.RIGHT){
-            dispatcherRightTexture
+        return if (selected){
+            if (orientation == DispatcherOrientation.RIGHT){
+                dispatcherRightSelectTexture
+            } else {
+                dispatcherLeftSelectTexture
+            }
         } else {
-            dispatcherLeftTexture
+            if (orientation == DispatcherOrientation.RIGHT){
+                dispatcherRightTexture
+            } else {
+                dispatcherLeftTexture
+            }
         }
     }
     // the texture is rendered from bottom left, the body position is in center of body
@@ -53,5 +64,11 @@ class Dispatcher (world: World, private val positionX : Float, private val posit
     }
     override fun getFixture() : Fixture? {
         return this.dispatcherFixture
+    }
+    fun select(){
+        selected = true
+    }
+    fun unSelect(){
+        selected = false
     }
 }

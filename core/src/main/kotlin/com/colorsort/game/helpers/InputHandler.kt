@@ -69,7 +69,7 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
             // if not paused before also reset score and dispatcher
             if (level.gameState != GameState.PAUSED){
                 level.resetScore()
-                level.dispatcherController.center()
+                level.mover.center()
             }
             // if paused before: set to in game
             if (level.gameState == GameState.PAUSED){

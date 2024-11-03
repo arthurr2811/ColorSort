@@ -11,8 +11,8 @@ import com.colorsort.game.gameObjects.Ball
 import com.colorsort.game.gameObjects.BallDestroyer
 import com.colorsort.game.gameObjects.Border
 import com.colorsort.game.gameObjects.Dispatcher
-import com.colorsort.game.gameObjects.DispatcherController
 import com.colorsort.game.gameObjects.Hopper
+import com.colorsort.game.gameObjects.Mover
 import com.colorsort.game.gameObjects.Obstacle
 import com.colorsort.game.gameObjects.Spawner
 import com.colorsort.game.helpers.ContactListener
@@ -35,7 +35,8 @@ class Level(levelDef: LevelDef)  {
     private val increaseSpawnInterval = levelDef.increaseSpawnInterval
     private val dispatcherLeft: Dispatcher = levelDef.dispatcherLeft
     private val dispatcherRight: Dispatcher = levelDef.dispatcherRight
-    val dispatcherController: DispatcherController = levelDef.dispatcherController
+    val mover: Mover = levelDef.mover
+    private var objectSelectedByPlayer = levelDef.objectSelectedByPlayer
 
     val ground : BallDestroyer = levelDef.ground
     private val leftBorder : Border = levelDef.leftBorder
@@ -169,16 +170,37 @@ class Level(levelDef: LevelDef)  {
 
     }
     private fun handleDirectInteraction(x : Float, y : Float, deltaX : Float, deltaY: Float){
-        val xMargin = 7 // as dispatcher is 15 long
-        val yMargin = 4 // as dispatcher is 5 high
+        val xMarginDisp = 7 // as dispatcher is 15 long
+        val yMarginDisp = 4 // as dispatcher is 5 high
+        val xMarginObst = 12
+        val yMarginObst = 3
 
-        val dispatcherPosition = dispatcherController.getDispatcherPosition()
+        val dispatcherPosition = mover.getDispatcherPosition()
+        val obstaclePosition = mover.getObstaclePosition()
         // if player taped somewhere near dispatcher center, move dispatcher
-        if (x > dispatcherPosition.x - xMargin && x < dispatcherPosition.x + xMargin
-            && y > dispatcherPosition.y - yMargin && y < dispatcherPosition.y + yMargin){
-            dispatcherController.moveDispatcher(deltaX)
+        if (x > dispatcherPosition.x - xMarginDisp && x < dispatcherPosition.x + xMarginDisp
+            && y > dispatcherPosition.y - yMarginDisp && y < dispatcherPosition.y + yMarginDisp){
+            if (objectSelectedByPlayer != MovableObjects.DISPATCHER){
+                objectSelectedByPlayer = MovableObjects.DISPATCHER
+                dispatcherLeft.select()
+                dispatcherRight.select()
+                obstacleList[0].unSelect() // FixMe not nice, hardcoded for 2 obstacles
+                obstacleList[1].unSelect()
+            }
+            mover.moveDispatcher(deltaX)
         }
-        // ToDo: handle objectSelection, move bottom obstacles, if tapped there
+        if (x > obstaclePosition.x - xMarginObst && x < obstaclePosition.x + xMarginObst
+            && y > obstaclePosition.y - yMarginObst && y < obstaclePosition.y + yMarginObst){
+            if (objectSelectedByPlayer != MovableObjects.OBSTACLES){
+                objectSelectedByPlayer = MovableObjects.OBSTACLES
+                dispatcherLeft.unSelect()
+                dispatcherRight.unSelect()
+                obstacleList[0].select()
+                obstacleList[1].select()
+            }
+
+            mover.moveObstacles(deltaX)
+        }
     }
     private fun handleIndirectTapInteraction(deltaX : Float?, x: Float?, y: Float?){
         // ToDo: if only x,y: it was objectSelection INput, select correspondingly dispatcher or obstacles
@@ -187,7 +209,7 @@ class Level(levelDef: LevelDef)  {
     private fun handleIndirectSwipeInteraction(deltaX : Float, deltaY: Float){
         // falls später mehrere hindernisse gesteuert: check ob eher x oder y swipe
         // falls x aktuell ausgewähltes bewegen, eher y: eins drüber oder drunter auswählen
-        dispatcherController.moveDispatcher(deltaX)
+        mover.moveDispatcher(deltaX)
         // ToDo add objectSelection with deltaY swipes, delta xSwipes move the selectedObject
         // etwa so: if(deltax < schwellenwert && delta y >deltx * 3) dann ganz klar ein swipe um anders zu steuern
     }
