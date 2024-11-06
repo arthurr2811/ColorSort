@@ -1,8 +1,11 @@
-package com.colorsort.game.gameObjects
+package com.colorsort.game.helpers
 
 import com.badlogic.gdx.math.Vector2
+import com.colorsort.game.gameObjects.Dispatcher
+import com.colorsort.game.gameObjects.Obstacle
+
 /*
-maps the input fro the player to movement of the dispatcher
+maps the input fro the player to movement of the dispatcher or obstacles
  */
 class Mover(private val dispatcherLeft: Dispatcher, private val dispatcherRight: Dispatcher,
             private val obstacleLeft: Obstacle, private val obstacleRight: Obstacle, private var sensitivity : Float) {

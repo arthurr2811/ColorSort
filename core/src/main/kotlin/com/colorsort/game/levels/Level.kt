@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.TimeUtils
 import com.colorsort.game.gameObjects.Ball
@@ -12,10 +13,10 @@ import com.colorsort.game.gameObjects.BallDestroyer
 import com.colorsort.game.gameObjects.Border
 import com.colorsort.game.gameObjects.Dispatcher
 import com.colorsort.game.gameObjects.Hopper
-import com.colorsort.game.gameObjects.Mover
 import com.colorsort.game.gameObjects.Obstacle
 import com.colorsort.game.gameObjects.Spawner
 import com.colorsort.game.helpers.ContactListener
+import com.colorsort.game.helpers.Mover
 import com.colorsort.game.helpers.TextDrawHelper
 import com.colorsort.game.helpers.TextureDrawHelper
 import com.colorsort.game.screens.GameState
@@ -27,9 +28,9 @@ Def can freely be adjusted. A level however cant be changed. It is defined by th
  */
 class Level(levelDef: LevelDef)  {
     // game objects
-    val ballsList : ArrayList<Ball> = levelDef.ballsList
-    val ballsToRemoveList : ArrayList <Ball> = levelDef.ballsToRemoveList
-    val hopperList : ArrayList<Hopper> = levelDef.hopperList
+    private val ballsList : ArrayList<Ball> = levelDef.ballsList
+    private val ballsToRemoveList : ArrayList <Ball> = levelDef.ballsToRemoveList
+    private val hopperList : ArrayList<Hopper> = levelDef.hopperList
     private val obstacleList : ArrayList<Obstacle> = levelDef.obstacleList
 
     val spawner : Spawner = levelDef.spawner
@@ -39,7 +40,7 @@ class Level(levelDef: LevelDef)  {
     val mover: Mover = levelDef.mover
     private var objectSelectedByPlayer = levelDef.objectSelectedByPlayer
 
-    val ground : BallDestroyer = levelDef.ground
+    private val ground : BallDestroyer = levelDef.ground
     private val leftBorder : Border = levelDef.leftBorder
     private val rightBorder : Border = levelDef.rightBorder
     // world and collision
@@ -62,13 +63,13 @@ class Level(levelDef: LevelDef)  {
     val worldWidth = levelDef.worldWidth
     val worldHeight = levelDef.worldHeight
     // sounds and music
-    var soundVolume = levelDef.soundVolume
-    var gameOverSound : Sound = levelDef.gameOverSound
-    var ballCollisionSound : Sound = levelDef.ballCollisionSound
-    var scoreSound : Sound = levelDef.scoreSound
+    private var soundVolume = levelDef.soundVolume
+    private var gameOverSound : Sound = levelDef.gameOverSound
+    private var ballCollisionSound : Sound = levelDef.ballCollisionSound
+    private var scoreSound : Sound = levelDef.scoreSound
     private val music : Music = levelDef.music
-    var playMusic = levelDef.playMusic
-    var playSound = levelDef.playSound
+    private var playMusic = levelDef.playMusic
+    private var playSound = levelDef.playSound
 
     init {
         world.setContactListener(contactListener)
@@ -139,7 +140,7 @@ class Level(levelDef: LevelDef)  {
         // for walls
         textureDrawHelpers.add(TextureDrawHelper(leftBorder.getTexture(), leftBorder.getTexturePosition(), leftBorder.getTextureSize()))
         textureDrawHelpers.add(TextureDrawHelper(rightBorder.getTexture(), rightBorder.getTexturePosition(), rightBorder.getTextureSize()))
-        // for start screen
+        // for other screens, which are rendered over the game
         if (gameState == GameState.STARTSCREEN){
             textureDrawHelpers.addAll(startScreen.getTexturePositions(playSound, playMusic))
         }
@@ -282,8 +283,32 @@ class Level(levelDef: LevelDef)  {
         scoreSound.dispose()
         music.dispose()
     }
-    fun getWorld () : World {
-        return this.world
+    // contactListener only gets the fixtures, which collide so we need this functions to check
+    // from what objects the fixtures came
+    fun findBallFromFixture(fixture: Fixture?) : Ball?{
+        // if any ball.getfixure() in ball ist -> fixture is from a ball
+        return ballsList.find { it.getFixture() == fixture }
+    }
+    fun findHopperFromFixture(fixture: Fixture?) : Hopper?{
+        // if any hopper.getfixure() in hopperList -> fixture is from a hopper
+        return hopperList.find { it.getFixture() == fixture }
+    }
+    fun findDestrBoarderFromFixture (fixture: Fixture?) : BallDestroyer? {
+        return if(fixture == ground.getFixture()){
+            ground
+        } else {
+            null
+        }
+    }
+    fun deleteBall(ball : Ball?) {
+        // DON'T REMOVE DIRECTLY we are in a physics step:
+        // https://www.iforce2d.net/b2dtut/removing-bodies#:~:text=The%20actual%20code%20to%20remove,timestep%2C%20usually%20a%20collision%20callback.
+        // add ball to remove list, remove later
+        if (ball != null) {
+            if (!ballsToRemoveList.contains(ball)) {
+                ballsToRemoveList.add(ball)
+            }
+        }
     }
     fun gameOver() {
         // reset everything at game over
@@ -312,9 +337,6 @@ class Level(levelDef: LevelDef)  {
     fun resetScore() {
         score = 0
     }
-    fun getScore () : Int{
-        return score
-    }
     fun soundOfOrOn(on : Boolean) {
         if (on){
             soundVolume = 1f
@@ -324,6 +346,12 @@ class Level(levelDef: LevelDef)  {
             playSound = false
         }
     }
+    fun isSoundOn () : Boolean{
+        return playSound
+    }
+    fun isMusicOn () : Boolean{
+        return playMusic
+    }
     fun musicOfOrOn(on : Boolean) {
         if (on){
             music.volume = 0.5f
@@ -332,6 +360,15 @@ class Level(levelDef: LevelDef)  {
             music.volume = 0f
             playMusic = false
         }
+    }
+    fun playScoreSound(){
+        scoreSound.play(soundVolume)
+    }
+    fun playCollisionSound() {
+        ballCollisionSound.play(soundVolume)
+    }
+    fun playGameOverSound() {
+        gameOverSound.play(soundVolume)
     }
     fun setInteractionMethod (interactionMethod: InteractionMethod){
         this.interactionMethod = interactionMethod

@@ -1,5 +1,7 @@
 package com.colorsort.game.screens
-
+/*
+in the settings screen its possible to reset the highScore and switch controls (aka interactionMethods)
+ */
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
@@ -53,12 +55,13 @@ class SettingsScreen() {
     fun handleTouchInput(x: Float, y: Float){
         val screenWidth = Gdx.graphics.width.toFloat()
         val screenHeight = Gdx.graphics.height.toFloat()
+        // if tap on location of reset highScore button --> reset highScore
         if (x > screenWidth * 0.25 && x < screenWidth * 0.75
             && y > screenHeight * 0.8 && y < screenHeight * 0.85){
             resetHighScore()
             return
         }
-        // x same for all interaction method buttons
+        // same for all interaction method buttons
         if (x > screenWidth * 0.3 && x < screenWidth * 0.7){
             if (y > screenHeight * 0.32 && y < screenHeight * 0.37){
                 setInteractionMethod(InteractionMethod.DIRECT)

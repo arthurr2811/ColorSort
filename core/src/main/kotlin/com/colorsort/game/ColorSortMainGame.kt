@@ -17,7 +17,11 @@ import com.colorsort.game.levels.InteractionMethod
 import com.colorsort.game.levels.Level
 import com.colorsort.game.levels.LevelDef
 import com.colorsort.game.screens.GameState
-
+/*
+the technical part of the application, handles everything not directly game related, like
+scaling the game world to the screen size, persist settings and highScore, rendering the game
+to the screen, android life cycle
+ */
 /** [com.badlogic.gdx.ApplicationListener] implementation shared by all platforms. */
 class ColorSortMainGame : ApplicationAdapter() {
     // camera and render
@@ -42,10 +46,8 @@ class ColorSortMainGame : ApplicationAdapter() {
     // shared preferences to persist high score
     private lateinit var preferences : Preferences
 
-    // ToDo general:
-    // 1) polish, clean up
     /*
-    Ideas for later: menu, adjustable game rules,
+    Ideas for later: adjustable game rules,
                      implement different levels (not endless, Level class boolean endless)
                      implement in game currency and skins (collect coins by playing,
                      buy skins, new levels etc. with coins)
@@ -104,7 +106,7 @@ class ColorSortMainGame : ApplicationAdapter() {
         }
         batch.end()
     }
-    // pause game, when app is put to pause by android
+    // pause game, when app is put to pause by android, save preferences
     override fun pause() {
         savePreferences()
         if(endlessMode.gameState == GameState.INGAME){
@@ -119,8 +121,8 @@ class ColorSortMainGame : ApplicationAdapter() {
     }
     private fun savePreferences() {
         preferences.putInteger("highscore", endlessMode.getHighScore())
-        preferences.putBoolean("sound", endlessMode.playSound)
-        preferences.putBoolean("music", endlessMode.playMusic)
+        preferences.putBoolean("sound", endlessMode.isSoundOn())
+        preferences.putBoolean("music", endlessMode.isMusicOn())
         preferences.putInteger("interactionMethod", endlessMode.getInteractionMethod().toInt())
         preferences.flush()
     }

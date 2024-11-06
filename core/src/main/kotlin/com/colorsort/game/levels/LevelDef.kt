@@ -10,9 +10,9 @@ import com.colorsort.game.gameObjects.Dispatcher
 import com.colorsort.game.gameObjects.DispatcherOrientation
 import com.colorsort.game.gameObjects.GameColor
 import com.colorsort.game.gameObjects.Hopper
-import com.colorsort.game.gameObjects.Mover
 import com.colorsort.game.gameObjects.Obstacle
 import com.colorsort.game.gameObjects.Spawner
+import com.colorsort.game.helpers.Mover
 import com.colorsort.game.screens.GameOverScreen
 import com.colorsort.game.screens.GamePause
 import com.colorsort.game.screens.GameState
@@ -21,7 +21,7 @@ import com.colorsort.game.screens.StartScreen
 
 /*
  define a Level, has standard values for basic endless game, everything can be changed to freely
- create a variety of levels
+ to create a variety of levels
  */
 class LevelDef {
     val worldWidth = 40f

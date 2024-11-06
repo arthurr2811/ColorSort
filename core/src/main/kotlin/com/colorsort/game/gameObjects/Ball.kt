@@ -30,7 +30,7 @@ class Ball (private var color : GameColor = GameColor.RANDOM, world: World, priv
             position.set(positionX, positionY)
             type = BodyDef.BodyType.DynamicBody
         }
-        ballFixture = ballBody!!.circle(radius = 1f){// -> durchmesser also 2!
+        ballFixture = ballBody!!.circle(radius = 1f){
             density = 1f
             friction = 1f
             restitution = 0.3f

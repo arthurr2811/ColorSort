@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.TimeUtils
 import com.colorsort.game.levels.Level
 import com.colorsort.game.screens.GameState
 /*
-handles player input
+handles all player input in general
  */
 class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
     var timeStampPaused : Long = 0
@@ -15,9 +15,9 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
     // scale input to world lengths
     val scaleFactorX = level.worldWidth / screenWidth
     val scaleFactorY = level.worldHeight / screenHeight
-    // if pan gesture and game state = in game -> move dispatcher
+
     override fun pan(x: Float, y: Float, deltaX: Float, deltaY: Float): Boolean {
-        // hand input over to level, scale to world dimensions
+        // hand input over to level, scale to world dimensions. Level will handle the input with its logic
         if (level.gameState == GameState.INGAME){
             level.handlePlayerInput(x * scaleFactorX, y * scaleFactorY,
                 deltaX * scaleFactorX, deltaY * scaleFactorY)
@@ -46,7 +46,7 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
         if (level.gameState == GameState.STARTSCREEN &&
             x > (screenWidth - screenWidth * 0.8) && x < (screenWidth - screenWidth * 0.7) &&
             y > (screenHeight - screenHeight * 0.25) && y < (screenHeight - screenHeight * 0.15)){
-            if (level.playSound){
+            if (level.isSoundOn()){
                 level.soundOfOrOn(false)
             } else {
                 level.soundOfOrOn(true)
@@ -57,7 +57,7 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
         if (level.gameState == GameState.STARTSCREEN &&
             x > (screenWidth - screenWidth * 0.3) && x < (screenWidth - screenWidth * 0.2) &&
             y > (screenHeight - screenHeight * 0.25) && y < (screenHeight - screenHeight * 0.15)){
-            if (level.playMusic){
+            if (level.isMusicOn()){
                 level.musicOfOrOn(false)
             } else {
                 level.musicOfOrOn(true)

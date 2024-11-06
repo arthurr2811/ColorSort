@@ -8,9 +8,9 @@ import com.badlogic.gdx.physics.box2d.World
 import ktx.box2d.body
 import ktx.box2d.polygon
 /*
-a double triangle shape. Moved by the player to influence the balls. Basically the controller for the
-player. The dispatcher is build from two triangles which are mirrored. Therefore orientation tells
-the two triangles apart. It has a position and exists in a world (box2D)
+a double triangle shape. Moved by the player to influence the balls. The dispatcher is build from
+two triangles which are mirrored. Therefore orientation tells the two triangles apart. It has a
+position and exists in a world (box2D). It can be selected or not selected.
  */
 class Dispatcher (world: World, private val positionX : Float, private val positionY : Float, private val orientation: DispatcherOrientation) :
     GameObject {
