@@ -42,9 +42,8 @@ class ColorSortMainGame : ApplicationAdapter() {
     private lateinit var preferences : Preferences
 
     // ToDo general:
-    // 1) implement missing 2 interactionMethods
-    // 2) fix highscore reset persistens, add settings persistenz (sound, music iteraction method)
-    // 3) polish, clean up
+    // 1) fix highscore reset persistens, add settings persistenz (sound, music iteraction method)
+    // 2) polish, clean up
     /*
     Ideas for later: menu, adjustable game rules,
                      implement different levels (not endless, Level class boolean endless)

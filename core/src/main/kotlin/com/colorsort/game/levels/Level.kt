@@ -19,6 +19,7 @@ import com.colorsort.game.helpers.ContactListener
 import com.colorsort.game.helpers.TextDrawHelper
 import com.colorsort.game.helpers.TextureDrawHelper
 import com.colorsort.game.screens.GameState
+import kotlin.math.abs
 
 /*
 a level defined by given level definition. The idea is to set up everything in a levelDef. A level
@@ -154,64 +155,97 @@ class Level(levelDef: LevelDef)  {
 
         return textureDrawHelpers
     }
-    // ToDo add selectedObject, which is either dispatcher or bottom obstacles: input updates selectedObject if necessary
-    //  and then moves selectedObject (add obstacleController)
+
+    // handle player inputs
     fun handlePlayerInput(x: Float, y: Float, deltaX: Float?, deltaY : Float?){
-        // decide based on interactionMOde what to do with input
+        // decide based on interactionMode what to do with input
         if (deltaX != null && deltaY != null){
             when(interactionMethod){
-                InteractionMethod.DIRECT -> handleDirectInteraction(x, y, deltaX,deltaY)
-                InteractionMethod.INDIRECT_TAP -> handleIndirectTapInteraction(deltaX,null, null)
+                InteractionMethod.DIRECT -> handleDirectInteraction(x, y, deltaX)
+                InteractionMethod.INDIRECT_TAP -> handleIndirectTapInteraction(deltaX,x, y)
                 InteractionMethod.INDIRECT_SWIPE -> handleIndirectSwipeInteraction(deltaX,deltaY)
             }
         } else if (interactionMethod == InteractionMethod.INDIRECT_TAP){
-            handleIndirectTapInteraction(null, null, x)
+            handleIndirectTapInteraction(null, x, y)
         }
 
     }
-    private fun handleDirectInteraction(x : Float, y : Float, deltaX : Float, deltaY: Float){
-        val xMarginDisp = 7 // as dispatcher is 15 long
-        val yMarginDisp = 4 // as dispatcher is 5 high
-        val xMarginObst = 12
-        val yMarginObst = 3
-
-        val dispatcherPosition = mover.getDispatcherPosition()
-        val obstaclePosition = mover.getObstaclePosition()
-        // if player taped somewhere near dispatcher center, move dispatcher
-        if (x > dispatcherPosition.x - xMarginDisp && x < dispatcherPosition.x + xMarginDisp
-            && y > dispatcherPosition.y - yMarginDisp && y < dispatcherPosition.y + yMarginDisp){
-            if (objectSelectedByPlayer != MovableObjects.DISPATCHER){
-                objectSelectedByPlayer = MovableObjects.DISPATCHER
-                dispatcherLeft.select()
-                dispatcherRight.select()
-                obstacleList[0].unSelect() // FixMe not nice, hardcoded for 2 obstacles
-                obstacleList[1].unSelect()
-            }
+    private fun handleDirectInteraction(x : Float, y : Float, deltaX : Float){
+        // move the object, the player swiped on
+        if (tappedDispatcher(x,y)){
+            switchToDispatcher()
             mover.moveDispatcher(deltaX)
         }
-        if (x > obstaclePosition.x - xMarginObst && x < obstaclePosition.x + xMarginObst
-            && y > obstaclePosition.y - yMarginObst && y < obstaclePosition.y + yMarginObst){
-            if (objectSelectedByPlayer != MovableObjects.OBSTACLES){
-                objectSelectedByPlayer = MovableObjects.OBSTACLES
-                dispatcherLeft.unSelect()
-                dispatcherRight.unSelect()
-                obstacleList[0].select()
-                obstacleList[1].select()
-            }
-
+        if (tappedObstacles(x,y)){
+            switchToObstacles()
             mover.moveObstacles(deltaX)
         }
     }
-    private fun handleIndirectTapInteraction(deltaX : Float?, x: Float?, y: Float?){
-        // ToDo: if only x,y: it was objectSelection INput, select correspondingly dispatcher or obstacles
-        //  if only deltaX it was movement: move selectedObject
+    private fun handleIndirectTapInteraction(deltaX : Float?, x: Float, y: Float){
+        // move the object, the player swiped on, or if swiped anywhere else move the last used object
+        if (tappedDispatcher(x,y)){
+            switchToDispatcher()
+        }
+        if (tappedObstacles(x,y)){
+            switchToObstacles()
+        }
+        if (deltaX != null){
+            if (objectSelectedByPlayer == MovableObjects.DISPATCHER){
+                mover.moveDispatcher(deltaX)
+            } else {
+                mover.moveObstacles(deltaX)
+            }
+        }
     }
     private fun handleIndirectSwipeInteraction(deltaX : Float, deltaY: Float){
-        // falls später mehrere hindernisse gesteuert: check ob eher x oder y swipe
-        // falls x aktuell ausgewähltes bewegen, eher y: eins drüber oder drunter auswählen
-        mover.moveDispatcher(deltaX)
-        // ToDo add objectSelection with deltaY swipes, delta xSwipes move the selectedObject
-        // etwa so: if(deltax < schwellenwert && delta y >deltx * 3) dann ganz klar ein swipe um anders zu steuern
+        // up and down swipes switch target, left and right swipes move target
+        // unclear inputs should rather count as move swipes, switch target swipes will be rare
+        // and should therefore be very clear (deltaY >>> deltaX)
+        if (abs(deltaY) > 0.5 && abs(deltaY) > abs(deltaX) * 5){
+            if (deltaY < 0){
+                switchToDispatcher()
+            } else{
+                switchToObstacles()
+            }
+        } else {
+            if (objectSelectedByPlayer == MovableObjects.DISPATCHER){
+                mover.moveDispatcher(deltaX)
+            } else {
+                mover.moveObstacles(deltaX)
+            }
+        }
+    }
+    private fun tappedDispatcher (x :Float, y: Float) : Boolean{
+        val dispatcherPosition = mover.getDispatcherPosition()
+        val xMarginDisp = 7
+        val yMarginDisp = 4
+        return (x > dispatcherPosition.x - xMarginDisp && x < dispatcherPosition.x + xMarginDisp
+                && y > dispatcherPosition.y - yMarginDisp && y < dispatcherPosition.y + yMarginDisp)
+    }
+    private fun tappedObstacles (x :Float, y: Float) : Boolean{
+        val obstaclePosition = mover.getObstaclePosition()
+        val xMarginObst = 12
+        val yMarginObst = 3
+        return (x > obstaclePosition.x - xMarginObst && x < obstaclePosition.x + xMarginObst
+            && y > obstaclePosition.y - yMarginObst && y < obstaclePosition.y + yMarginObst)
+    }
+    private fun switchToDispatcher () {
+        if (objectSelectedByPlayer != MovableObjects.DISPATCHER){
+            objectSelectedByPlayer = MovableObjects.DISPATCHER
+            dispatcherLeft.select()
+            dispatcherRight.select()
+            obstacleList[0].unSelect()
+            obstacleList[1].unSelect()
+        }
+    }
+    private fun switchToObstacles () {
+        if (objectSelectedByPlayer != MovableObjects.OBSTACLES){
+            objectSelectedByPlayer = MovableObjects.OBSTACLES
+            dispatcherLeft.unSelect()
+            dispatcherRight.unSelect()
+            obstacleList[0].select()
+            obstacleList[1].select()
+        }
     }
     private fun doStep () {
         // check if need to spawn new ball
