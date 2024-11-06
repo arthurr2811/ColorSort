@@ -46,14 +46,22 @@ class InputHandler (val level: Level) : GestureDetector.GestureAdapter() {
         if (level.gameState == GameState.STARTSCREEN &&
             x > (screenWidth - screenWidth * 0.8) && x < (screenWidth - screenWidth * 0.7) &&
             y > (screenHeight - screenHeight * 0.25) && y < (screenHeight - screenHeight * 0.15)){
-            level.soundOfOrOn()
+            if (level.playSound){
+                level.soundOfOrOn(false)
+            } else {
+                level.soundOfOrOn(true)
+            }
             return true
         }
         // same for music icon
         if (level.gameState == GameState.STARTSCREEN &&
             x > (screenWidth - screenWidth * 0.3) && x < (screenWidth - screenWidth * 0.2) &&
             y > (screenHeight - screenHeight * 0.25) && y < (screenHeight - screenHeight * 0.15)){
-            level.musicOfOrOn()
+            if (level.playMusic){
+                level.musicOfOrOn(false)
+            } else {
+                level.musicOfOrOn(true)
+            }
             return true
         }
         // tap on settings icon, go to settings

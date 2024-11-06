@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.colorsort.game.helpers.InputHandler
+import com.colorsort.game.levels.InteractionMethod
 import com.colorsort.game.levels.Level
 import com.colorsort.game.levels.LevelDef
 import com.colorsort.game.screens.GameState
@@ -42,8 +43,7 @@ class ColorSortMainGame : ApplicationAdapter() {
     private lateinit var preferences : Preferences
 
     // ToDo general:
-    // 1) fix highscore reset persistens, add settings persistenz (sound, music iteraction method)
-    // 2) polish, clean up
+    // 1) polish, clean up
     /*
     Ideas for later: menu, adjustable game rules,
                      implement different levels (not endless, Level class boolean endless)
@@ -70,9 +70,13 @@ class ColorSortMainGame : ApplicationAdapter() {
         // input handler
         inputHandler = InputHandler(endlessMode)
         Gdx.input.inputProcessor = GestureDetector(inputHandler)
-        // load persistent high score from shared preferences
+        // load persistent preferences from shared preferences
         preferences = Gdx.app.getPreferences("ColorSortPreferences")
         endlessMode.setHighScore(preferences.getInteger("highscore", 0))
+        endlessMode.soundOfOrOn(preferences.getBoolean("sound", true))
+        endlessMode.musicOfOrOn(preferences.getBoolean("music", true))
+        endlessMode.setInteractionMethod(InteractionMethod.fromInt(
+            preferences.getInteger("interactionMethod", 1))?: InteractionMethod.DIRECT)
     }
     // sizes camera to screen size
     override fun resize(width: Int, height: Int) {
@@ -102,16 +106,22 @@ class ColorSortMainGame : ApplicationAdapter() {
     }
     // pause game, when app is put to pause by android
     override fun pause() {
+        savePreferences()
         if(endlessMode.gameState == GameState.INGAME){
             endlessMode.gameState = GameState.PAUSED
         }
     }
-    // before app gets killed save high score and dispose textures
+    // before app gets killed save preferences and dispose textures
     override fun dispose() {
-        // persistent high score
-        preferences.putInteger("highscore", endlessMode.getHighScore())
-        preferences.flush()
+        savePreferences()
         // dispose textures
         endlessMode.dispose()
+    }
+    private fun savePreferences() {
+        preferences.putInteger("highscore", endlessMode.getHighScore())
+        preferences.putBoolean("sound", endlessMode.playSound)
+        preferences.putBoolean("music", endlessMode.playMusic)
+        preferences.putInteger("interactionMethod", endlessMode.getInteractionMethod().toInt())
+        preferences.flush()
     }
 }

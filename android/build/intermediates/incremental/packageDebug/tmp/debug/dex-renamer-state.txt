@@ -1,4 +1,4 @@
-#Wed Nov 06 11:55:02 CET 2024
+#Wed Nov 06 13:01:53 CET 2024
 base.0=C\:\\Users\\arthu\\AndroidStudioProjects\\ColorSortNew\\android\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 base.1=C\:\\Users\\arthu\\AndroidStudioProjects\\ColorSortNew\\android\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\10\\classes.dex
 base.2=C\:\\Users\\arthu\\AndroidStudioProjects\\ColorSortNew\\android\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\12\\classes.dex

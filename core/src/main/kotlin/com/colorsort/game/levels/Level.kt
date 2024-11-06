@@ -67,8 +67,8 @@ class Level(levelDef: LevelDef)  {
     var ballCollisionSound : Sound = levelDef.ballCollisionSound
     var scoreSound : Sound = levelDef.scoreSound
     private val music : Music = levelDef.music
-    private var playMusic = levelDef.playMusic
-    private var playSound = levelDef.playSound
+    var playMusic = levelDef.playMusic
+    var playSound = levelDef.playSound
 
     init {
         world.setContactListener(contactListener)
@@ -315,26 +315,29 @@ class Level(levelDef: LevelDef)  {
     fun getScore () : Int{
         return score
     }
-    fun soundOfOrOn() {
-        if (playSound){
-            soundVolume = 0f
-            playSound = false
-        } else {
+    fun soundOfOrOn(on : Boolean) {
+        if (on){
             soundVolume = 1f
             playSound = true
+        } else {
+            soundVolume = 0f
+            playSound = false
         }
     }
-    fun musicOfOrOn() {
-        if (playMusic){
-            music.volume = 0f
-            playMusic = false
-        } else {
+    fun musicOfOrOn(on : Boolean) {
+        if (on){
             music.volume = 0.5f
             playMusic = true
+        } else {
+            music.volume = 0f
+            playMusic = false
         }
     }
     fun setInteractionMethod (interactionMethod: InteractionMethod){
         this.interactionMethod = interactionMethod
+    }
+    fun getInteractionMethod () : InteractionMethod{
+        return this.interactionMethod
     }
     fun inputToSettingsMenu(x : Float, y : Float){
         settingsScreen.handleTouchInput(x, y)
