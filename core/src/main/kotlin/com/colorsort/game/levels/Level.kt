@@ -56,9 +56,13 @@ class Level(levelDef: LevelDef)  {
     private var interactionMethod = levelDef.interactionMethod
     // for ball spawning
     var lastSpawnTime : Long = 0
-    // score
+    // score and statistics
     private var score = 0
     private var highScore = 0
+    private var maxXTap = 0
+    private var minXTap = 40
+    private var maxYTap = 0
+    private var minYTap = 80
     // world dimensions
     val worldWidth = levelDef.worldWidth
     val worldHeight = levelDef.worldHeight
@@ -102,8 +106,13 @@ class Level(levelDef: LevelDef)  {
             texts.add(TextDrawHelper("<---->", Vector2(worldWidth/2, 41f), Color.BLACK, 4f))
         }
         if (gameState == GameState.STARTSCREEN){
-            texts.add(TextDrawHelper("High Score:", Vector2(worldWidth/2, 27f), Color.BLACK, 4f))
-            texts.add(TextDrawHelper(highScore.toString(), Vector2(worldWidth/2, 24f), Color.BLACK, 4f))
+            // show HighScore
+            texts.add(TextDrawHelper("High Score:", Vector2(worldWidth/2, 30f), Color.BLACK, 4f))
+            texts.add(TextDrawHelper(highScore.toString(), Vector2(worldWidth/2, 27f), Color.BLACK, 4f))
+            // show TouchStatistics
+            texts.add(TextDrawHelper("Tap Statistics:", Vector2(worldWidth/2, 24f), Color.BLACK, 4f))
+            texts.add(TextDrawHelper("X Axis: $maxXTap, $minXTap Y Axis: $maxYTap, $minYTap",
+                Vector2(worldWidth/2, 21f), Color.BLACK, 4f))
         }
         return texts
     }
@@ -159,6 +168,9 @@ class Level(levelDef: LevelDef)  {
 
     // handle player inputs
     fun handlePlayerInput(x: Float, y: Float, deltaX: Float?, deltaY : Float?){
+        // update statistics
+        println("x: $x, y: $y")
+        updateTapStatistics(x,y)
         // decide based on interactionMode what to do with input
         if (deltaX != null && deltaY != null){
             when(interactionMethod){
@@ -170,6 +182,12 @@ class Level(levelDef: LevelDef)  {
             handleIndirectTapInteraction(null, x, y)
         }
 
+    }
+    private fun updateTapStatistics(x : Float, y : Float){
+        maxXTap = maxOf(maxXTap, x.toInt())
+        minXTap = minOf(minXTap, x.toInt())
+        maxYTap = maxOf(maxYTap, y.toInt())
+        minYTap = minOf(minYTap, y.toInt())
     }
     private fun handleDirectInteraction(x : Float, y : Float, deltaX : Float){
         // move the object, the player swiped on
@@ -326,6 +344,12 @@ class Level(levelDef: LevelDef)  {
     }
     fun setHighScore(highScore : Int){
         this.highScore = highScore
+    }
+    fun resetTapStatistics() {
+        maxXTap = 0
+        minXTap = 40
+        maxYTap = 0
+        minYTap = 80
     }
     fun increaseScore (amount : Int){
         score += amount

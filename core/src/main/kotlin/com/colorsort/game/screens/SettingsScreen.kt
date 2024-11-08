@@ -13,7 +13,7 @@ class SettingsScreen() {
     private val settingsScreenTexture by lazy { Texture("Screens/SettingsScreen400_800.png") }
     private val controlPanelTexture by lazy { Texture("Screens/controlPanel200_500.png") }
 
-    private val resetHighscoreTexture by lazy { Texture("ButtonsAndIcons/ResetHighscore20_5.png") }
+    private val resetHighscoreTexture by lazy { Texture("ButtonsAndIcons/ResetStatistics20_5.png") }
     private val directTexture by lazy { Texture("ButtonsAndIcons/direct15_5.png") }
     private val directSelectTexture by lazy { Texture("ButtonsAndIcons/directSelect15_5.png") }
     private val indirectSwipeTexture by lazy { Texture("ButtonsAndIcons/indirectSwipe15_5.png") }
@@ -58,7 +58,7 @@ class SettingsScreen() {
         // if tap on location of reset highScore button --> reset highScore
         if (x > screenWidth * 0.25 && x < screenWidth * 0.75
             && y > screenHeight * 0.8 && y < screenHeight * 0.85){
-            resetHighScore()
+            resetStatistics()
             return
         }
         // same for all interaction method buttons
@@ -77,8 +77,9 @@ class SettingsScreen() {
             }
         }
     }
-    private fun resetHighScore(){
+    private fun resetStatistics(){
         level.setHighScore(0)
+        level.resetTapStatistics()
     }
     private fun setInteractionMethod(interactionMethod: InteractionMethod){
         level.setInteractionMethod(interactionMethod)
