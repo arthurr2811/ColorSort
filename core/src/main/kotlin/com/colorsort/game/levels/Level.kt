@@ -59,10 +59,8 @@ class Level(levelDef: LevelDef)  {
     // score and statistics
     private var score = 0
     private var highScore = 0
-    private var maxXTap = 0
-    private var minXTap = 40
-    private var maxYTap = 0
-    private var minYTap = 80
+    private var farTaps = 0
+    private var veryFarTaps = 0
     // world dimensions
     val worldWidth = levelDef.worldWidth
     val worldHeight = levelDef.worldHeight
@@ -111,7 +109,7 @@ class Level(levelDef: LevelDef)  {
             texts.add(TextDrawHelper(highScore.toString(), Vector2(worldWidth/2, 27f), Color.BLACK, 4f))
             // show TouchStatistics
             texts.add(TextDrawHelper("Tap Statistics:", Vector2(worldWidth/2, 24f), Color.BLACK, 4f))
-            texts.add(TextDrawHelper("X Axis: $maxXTap, $minXTap Y Axis: $maxYTap, $minYTap",
+            texts.add(TextDrawHelper("Far Taps: $farTaps, Very Far Taps: $veryFarTaps",
                 Vector2(worldWidth/2, 21f), Color.BLACK, 4f))
         }
         return texts
@@ -169,7 +167,6 @@ class Level(levelDef: LevelDef)  {
     // handle player inputs
     fun handlePlayerInput(x: Float, y: Float, deltaX: Float?, deltaY : Float?){
         // update statistics
-        println("x: $x, y: $y")
         updateTapStatistics(x,y)
         // decide based on interactionMode what to do with input
         if (deltaX != null && deltaY != null){
@@ -184,10 +181,17 @@ class Level(levelDef: LevelDef)  {
 
     }
     private fun updateTapStatistics(x : Float, y : Float){
-        maxXTap = maxOf(maxXTap, x.toInt())
-        minXTap = minOf(minXTap, x.toInt())
-        maxYTap = maxOf(maxYTap, y.toInt())
-        minYTap = minOf(minYTap, y.toInt())
+        // if a tap is within 75% of game world size its assumed to be normal tap,
+        // outside 75 % but inside 90% its a far tap and everything further is a very far tap
+
+        // far taps
+        if (((x < 10 && x > 5) || (x > 30 && x < 35) || (y < 20 && y > 10) || (y > 60 && y < 70)) && farTaps < 999){
+            farTaps++
+        }
+        // very far taps
+        if ((x < 5 || x > 35 || y < 10 || y > 70) && veryFarTaps < 999){
+            veryFarTaps++
+        }
     }
     private fun handleDirectInteraction(x : Float, y : Float, deltaX : Float){
         // move the object, the player swiped on
@@ -346,10 +350,8 @@ class Level(levelDef: LevelDef)  {
         this.highScore = highScore
     }
     fun resetTapStatistics() {
-        maxXTap = 0
-        minXTap = 40
-        maxYTap = 0
-        minYTap = 80
+        farTaps = 0
+        veryFarTaps = 0
     }
     fun increaseScore (amount : Int){
         score += amount
