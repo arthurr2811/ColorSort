@@ -7,20 +7,21 @@ import com.colorsort.game.gameObjects.Ball
 import com.colorsort.game.gameObjects.BallDestroyer
 import com.colorsort.game.gameObjects.Border
 import com.colorsort.game.gameObjects.Dispatcher
-import com.colorsort.game.gameObjects.DispatcherController
 import com.colorsort.game.gameObjects.DispatcherOrientation
 import com.colorsort.game.gameObjects.GameColor
 import com.colorsort.game.gameObjects.Hopper
 import com.colorsort.game.gameObjects.Obstacle
 import com.colorsort.game.gameObjects.Spawner
+import com.colorsort.game.helpers.Mover
 import com.colorsort.game.screens.GameOverScreen
 import com.colorsort.game.screens.GamePause
 import com.colorsort.game.screens.GameState
+import com.colorsort.game.screens.SettingsScreen
 import com.colorsort.game.screens.StartScreen
 
 /*
  define a Level, has standard values for basic endless game, everything can be changed to freely
- create a variety of levels
+ to create a variety of levels
  */
 class LevelDef {
     val worldWidth = 40f
@@ -39,17 +40,21 @@ class LevelDef {
     val gameOverScreen = GameOverScreen()
     val startScreen = StartScreen()
     val pauseScreen = GamePause()
+    val settingsScreen = SettingsScreen()
+
+    val interactionMethod = InteractionMethod.INDIRECT_SWIPE
 
 
     var spawner : Spawner = Spawner(worldWidth / 2, worldHeight - 5, 3.5f,world)
     var increaseSpawnInterval = true
     var dispatcherLeft: Dispatcher = Dispatcher(world, 11f, worldHeight - 32f, DispatcherOrientation.LEFT)
     var dispatcherRight: Dispatcher = Dispatcher(world, 21f, worldHeight - 32f, DispatcherOrientation.RIGHT)
-    var dispatcherController: DispatcherController = DispatcherController(dispatcherLeft, dispatcherRight, 0.3f)
+    var mover: Mover
 
     var ground : BallDestroyer = BallDestroyer(world, Vector2(0f, 0f), Vector2(40f, 0f), Vector2(0f, 0.1f))
     var leftBorder : Border = Border(world, 0.1f, 80f, Vector2(1f, 40f))
     var rightBorder : Border = Border(world, 0.1f, 80f, Vector2(39f, 40f))
+    var objectSelectedByPlayer : MovableObjects = MovableObjects.DISPATCHER
 
     var soundVolume = 1f
     var gameOverSound = Gdx.audio.newSound(Gdx.files.internal("MusicAndSound/GameOverSound.mp3"))
@@ -71,5 +76,6 @@ class LevelDef {
         obstacleList.add(leftObstacle)
         val rightObstacle = Obstacle(world, worldWidth * 0.65f -2, worldHeight * 0.2f)
         obstacleList.add(rightObstacle)
+        mover = Mover(dispatcherLeft, dispatcherRight, leftObstacle, rightObstacle, 1f)
     }
 }

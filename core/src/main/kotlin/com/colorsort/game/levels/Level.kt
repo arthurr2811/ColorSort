@@ -5,20 +5,22 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.TimeUtils
 import com.colorsort.game.gameObjects.Ball
 import com.colorsort.game.gameObjects.BallDestroyer
 import com.colorsort.game.gameObjects.Border
 import com.colorsort.game.gameObjects.Dispatcher
-import com.colorsort.game.gameObjects.DispatcherController
 import com.colorsort.game.gameObjects.Hopper
 import com.colorsort.game.gameObjects.Obstacle
 import com.colorsort.game.gameObjects.Spawner
 import com.colorsort.game.helpers.ContactListener
+import com.colorsort.game.helpers.Mover
 import com.colorsort.game.helpers.TextDrawHelper
 import com.colorsort.game.helpers.TextureDrawHelper
 import com.colorsort.game.screens.GameState
+import kotlin.math.abs
 
 /*
 a level defined by given level definition. The idea is to set up everything in a levelDef. A level
@@ -26,18 +28,19 @@ Def can freely be adjusted. A level however cant be changed. It is defined by th
  */
 class Level(levelDef: LevelDef)  {
     // game objects
-    val ballsList : ArrayList<Ball> = levelDef.ballsList
-    val ballsToRemoveList : ArrayList <Ball> = levelDef.ballsToRemoveList
-    val hopperList : ArrayList<Hopper> = levelDef.hopperList
+    private val ballsList : ArrayList<Ball> = levelDef.ballsList
+    private val ballsToRemoveList : ArrayList <Ball> = levelDef.ballsToRemoveList
+    private val hopperList : ArrayList<Hopper> = levelDef.hopperList
     private val obstacleList : ArrayList<Obstacle> = levelDef.obstacleList
 
     val spawner : Spawner = levelDef.spawner
     private val increaseSpawnInterval = levelDef.increaseSpawnInterval
     private val dispatcherLeft: Dispatcher = levelDef.dispatcherLeft
     private val dispatcherRight: Dispatcher = levelDef.dispatcherRight
-    val dispatcherController: DispatcherController = levelDef.dispatcherController
+    val mover: Mover = levelDef.mover
+    private var objectSelectedByPlayer = levelDef.objectSelectedByPlayer
 
-    val ground : BallDestroyer = levelDef.ground
+    private val ground : BallDestroyer = levelDef.ground
     private val leftBorder : Border = levelDef.leftBorder
     private val rightBorder : Border = levelDef.rightBorder
     // world and collision
@@ -48,19 +51,22 @@ class Level(levelDef: LevelDef)  {
     private val startScreen = levelDef.startScreen
     private val gameOverScreen = levelDef.gameOverScreen
     private val pauseScreen = levelDef.pauseScreen
+    private val settingsScreen = levelDef.settingsScreen
+    // interaction method
+    private var interactionMethod = levelDef.interactionMethod
     // for ball spawning
     var lastSpawnTime : Long = 0
     // score
     private var score = 0
     private var highScore = 0
     // world dimensions
-    private val worldWidth = levelDef.worldWidth
-    private val worldHeight = levelDef.worldHeight
+    val worldWidth = levelDef.worldWidth
+    val worldHeight = levelDef.worldHeight
     // sounds and music
-    var soundVolume = levelDef.soundVolume
-    var gameOverSound : Sound = levelDef.gameOverSound
-    var ballCollisionSound : Sound = levelDef.ballCollisionSound
-    var scoreSound : Sound = levelDef.scoreSound
+    private var soundVolume = levelDef.soundVolume
+    private var gameOverSound : Sound = levelDef.gameOverSound
+    private var ballCollisionSound : Sound = levelDef.ballCollisionSound
+    private var scoreSound : Sound = levelDef.scoreSound
     private val music : Music = levelDef.music
     private var playMusic = levelDef.playMusic
     private var playSound = levelDef.playSound
@@ -70,6 +76,7 @@ class Level(levelDef: LevelDef)  {
         music.isLooping = true
         music.volume = 0.5f
         music.play()
+        settingsScreen.level = this
     }
 
     // returns a List of TextDraw Helper containing every texts to be drawn and their position
@@ -77,7 +84,7 @@ class Level(levelDef: LevelDef)  {
         // draw score
         val texts = ArrayList<TextDrawHelper>()
         // draw score top center
-        if (gameState != GameState.STARTSCREEN){
+        if (gameState != GameState.STARTSCREEN && gameState!= GameState.SETTINGS){
             texts.add(TextDrawHelper("Score", Vector2(worldWidth/2, 78f), Color.WHITE, 2f))
             texts.add(TextDrawHelper(score.toString(), Vector2(worldWidth/2, 76f), Color.WHITE, 2f))
         }
@@ -133,7 +140,7 @@ class Level(levelDef: LevelDef)  {
         // for walls
         textureDrawHelpers.add(TextureDrawHelper(leftBorder.getTexture(), leftBorder.getTexturePosition(), leftBorder.getTextureSize()))
         textureDrawHelpers.add(TextureDrawHelper(rightBorder.getTexture(), rightBorder.getTexturePosition(), rightBorder.getTextureSize()))
-        // for start screen
+        // for other screens, which are rendered over the game
         if (gameState == GameState.STARTSCREEN){
             textureDrawHelpers.addAll(startScreen.getTexturePositions(playSound, playMusic))
         }
@@ -143,8 +150,103 @@ class Level(levelDef: LevelDef)  {
         if (gameState == GameState.PAUSED){
             textureDrawHelpers.add(TextureDrawHelper(pauseScreen.getTexture(), pauseScreen.getTexturePosition(), pauseScreen.getTextureSize()))
         }
+        if (gameState == GameState.SETTINGS){
+            textureDrawHelpers.addAll(settingsScreen.getTexturePositions(interactionMethod))
+        }
 
         return textureDrawHelpers
+    }
+
+    // handle player inputs
+    fun handlePlayerInput(x: Float, y: Float, deltaX: Float?, deltaY : Float?){
+        // decide based on interactionMode what to do with input
+        if (deltaX != null && deltaY != null){
+            when(interactionMethod){
+                InteractionMethod.DIRECT -> handleDirectInteraction(x, y, deltaX)
+                InteractionMethod.INDIRECT_TAP -> handleIndirectTapInteraction(deltaX,x, y)
+                InteractionMethod.INDIRECT_SWIPE -> handleIndirectSwipeInteraction(deltaX,deltaY)
+            }
+        } else if (interactionMethod == InteractionMethod.INDIRECT_TAP){
+            handleIndirectTapInteraction(null, x, y)
+        }
+
+    }
+    private fun handleDirectInteraction(x : Float, y : Float, deltaX : Float){
+        // move the object, the player swiped on
+        if (tappedDispatcher(x,y)){
+            switchToDispatcher()
+            mover.moveDispatcher(deltaX)
+        }
+        if (tappedObstacles(x,y)){
+            switchToObstacles()
+            mover.moveObstacles(deltaX)
+        }
+    }
+    private fun handleIndirectTapInteraction(deltaX : Float?, x: Float, y: Float){
+        // move the object, the player swiped on, or if swiped anywhere else move the last used object
+        if (tappedDispatcher(x,y)){
+            switchToDispatcher()
+        }
+        if (tappedObstacles(x,y)){
+            switchToObstacles()
+        }
+        if (deltaX != null){
+            if (objectSelectedByPlayer == MovableObjects.DISPATCHER){
+                mover.moveDispatcher(deltaX)
+            } else {
+                mover.moveObstacles(deltaX)
+            }
+        }
+    }
+    private fun handleIndirectSwipeInteraction(deltaX : Float, deltaY: Float){
+        // up and down swipes switch target, left and right swipes move target
+        // unclear inputs should rather count as move swipes, switch target swipes will be rare
+        // and should therefore be very clear (deltaY >>> deltaX)
+        if (abs(deltaY) > 0.5 && abs(deltaY) > abs(deltaX) * 5){
+            if (deltaY < 0){
+                switchToDispatcher()
+            } else{
+                switchToObstacles()
+            }
+        } else {
+            if (objectSelectedByPlayer == MovableObjects.DISPATCHER){
+                mover.moveDispatcher(deltaX)
+            } else {
+                mover.moveObstacles(deltaX)
+            }
+        }
+    }
+    private fun tappedDispatcher (x :Float, y: Float) : Boolean{
+        val dispatcherPosition = mover.getDispatcherPosition()
+        val xMarginDisp = 7
+        val yMarginDisp = 4
+        return (x > dispatcherPosition.x - xMarginDisp && x < dispatcherPosition.x + xMarginDisp
+                && y > dispatcherPosition.y - yMarginDisp && y < dispatcherPosition.y + yMarginDisp)
+    }
+    private fun tappedObstacles (x :Float, y: Float) : Boolean{
+        val obstaclePosition = mover.getObstaclePosition()
+        val xMarginObst = 12
+        val yMarginObst = 3
+        return (x > obstaclePosition.x - xMarginObst && x < obstaclePosition.x + xMarginObst
+            && y > obstaclePosition.y - yMarginObst && y < obstaclePosition.y + yMarginObst)
+    }
+    private fun switchToDispatcher () {
+        if (objectSelectedByPlayer != MovableObjects.DISPATCHER){
+            objectSelectedByPlayer = MovableObjects.DISPATCHER
+            dispatcherLeft.select()
+            dispatcherRight.select()
+            obstacleList[0].unSelect()
+            obstacleList[1].unSelect()
+        }
+    }
+    private fun switchToObstacles () {
+        if (objectSelectedByPlayer != MovableObjects.OBSTACLES){
+            objectSelectedByPlayer = MovableObjects.OBSTACLES
+            dispatcherLeft.unSelect()
+            dispatcherRight.unSelect()
+            obstacleList[0].select()
+            obstacleList[1].select()
+        }
     }
     private fun doStep () {
         // check if need to spawn new ball
@@ -181,8 +283,32 @@ class Level(levelDef: LevelDef)  {
         scoreSound.dispose()
         music.dispose()
     }
-    fun getWorld () : World {
-        return this.world
+    // contactListener only gets the fixtures, which collide so we need this functions to check
+    // from what objects the fixtures came
+    fun findBallFromFixture(fixture: Fixture?) : Ball?{
+        // if any ball.getfixure() in ball ist -> fixture is from a ball
+        return ballsList.find { it.getFixture() == fixture }
+    }
+    fun findHopperFromFixture(fixture: Fixture?) : Hopper?{
+        // if any hopper.getfixure() in hopperList -> fixture is from a hopper
+        return hopperList.find { it.getFixture() == fixture }
+    }
+    fun findDestrBoarderFromFixture (fixture: Fixture?) : BallDestroyer? {
+        return if(fixture == ground.getFixture()){
+            ground
+        } else {
+            null
+        }
+    }
+    fun deleteBall(ball : Ball?) {
+        // DON'T REMOVE DIRECTLY we are in a physics step:
+        // https://www.iforce2d.net/b2dtut/removing-bodies#:~:text=The%20actual%20code%20to%20remove,timestep%2C%20usually%20a%20collision%20callback.
+        // add ball to remove list, remove later
+        if (ball != null) {
+            if (!ballsToRemoveList.contains(ball)) {
+                ballsToRemoveList.add(ball)
+            }
+        }
     }
     fun gameOver() {
         // reset everything at game over
@@ -211,25 +337,46 @@ class Level(levelDef: LevelDef)  {
     fun resetScore() {
         score = 0
     }
-    fun getScore () : Int{
-        return score
-    }
-    fun soundOfOrOn() {
-        if (playSound){
-            soundVolume = 0f
-            playSound = false
-        } else {
+    fun soundOfOrOn(on : Boolean) {
+        if (on){
             soundVolume = 1f
             playSound = true
+        } else {
+            soundVolume = 0f
+            playSound = false
         }
     }
-    fun musicOfOrOn() {
-        if (playMusic){
-            music.volume = 0f
-            playMusic = false
-        } else {
+    fun isSoundOn () : Boolean{
+        return playSound
+    }
+    fun isMusicOn () : Boolean{
+        return playMusic
+    }
+    fun musicOfOrOn(on : Boolean) {
+        if (on){
             music.volume = 0.5f
             playMusic = true
+        } else {
+            music.volume = 0f
+            playMusic = false
         }
+    }
+    fun playScoreSound(){
+        scoreSound.play(soundVolume)
+    }
+    fun playCollisionSound() {
+        ballCollisionSound.play(soundVolume)
+    }
+    fun playGameOverSound() {
+        gameOverSound.play(soundVolume)
+    }
+    fun setInteractionMethod (interactionMethod: InteractionMethod){
+        this.interactionMethod = interactionMethod
+    }
+    fun getInteractionMethod () : InteractionMethod{
+        return this.interactionMethod
+    }
+    fun inputToSettingsMenu(x : Float, y : Float){
+        settingsScreen.handleTouchInput(x, y)
     }
 }

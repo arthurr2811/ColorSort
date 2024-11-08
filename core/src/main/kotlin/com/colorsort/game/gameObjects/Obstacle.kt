@@ -8,14 +8,16 @@ import com.badlogic.gdx.physics.box2d.World
 import ktx.box2d.body
 import ktx.box2d.polygon
 /*
-a passive triangle that deflects balls. It has a position and exists in a world (box2D)
+a triangle that deflects balls. It has a position and exists in a world (box2D). It can be moved
+by the player. It can be selected and not selected
  */
 class Obstacle(world: World, private val positionX : Float, private val positionY : Float) :
     GameObject {
     private var obstacleBody : Body? = null
     private var obstacleFixture : Fixture? = null
-    private val obstacleTexture by lazy { Texture("Obstacle200_120.png") }
-
+    private var selected : Boolean = false
+    private val obstacleTexture by lazy { Texture("Obstacle/Obstacle200_120.png") }
+    private val obstacleSelectedTexture by lazy { Texture("Obstacle/ObstacleSelect200_120.png") }
     init {
         obstacleBody = world.body {
             position.set(positionX, positionY)
@@ -24,7 +26,11 @@ class Obstacle(world: World, private val positionX : Float, private val position
     }
 
     override fun getTexture(): Texture {
-        return this.obstacleTexture
+        return if (selected){
+            this.obstacleSelectedTexture
+        } else{
+            this.obstacleTexture
+        }
     }
 
     override fun getTexturePosition(): Vector2 {
@@ -41,6 +47,12 @@ class Obstacle(world: World, private val positionX : Float, private val position
 
     override fun getFixture(): Fixture? {
         return this.obstacleFixture
+    }
+    fun select(){
+        selected = true
+    }
+    fun unSelect(){
+        selected = false
     }
 
 }

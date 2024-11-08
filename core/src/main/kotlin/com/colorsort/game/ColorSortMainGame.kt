@@ -13,10 +13,15 @@ import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.colorsort.game.helpers.InputHandler
+import com.colorsort.game.levels.InteractionMethod
 import com.colorsort.game.levels.Level
 import com.colorsort.game.levels.LevelDef
 import com.colorsort.game.screens.GameState
-
+/*
+the technical part of the application, handles everything not directly game related, like
+scaling the game world to the screen size, persist settings and highScore, rendering the game
+to the screen, android life cycle
+ */
 /** [com.badlogic.gdx.ApplicationListener] implementation shared by all platforms. */
 class ColorSortMainGame : ApplicationAdapter() {
     // camera and render
@@ -42,7 +47,7 @@ class ColorSortMainGame : ApplicationAdapter() {
     private lateinit var preferences : Preferences
 
     /*
-    Ideas for later: menu, adjustable game rules,
+    Ideas for later: adjustable game rules,
                      implement different levels (not endless, Level class boolean endless)
                      implement in game currency and skins (collect coins by playing,
                      buy skins, new levels etc. with coins)
@@ -67,9 +72,13 @@ class ColorSortMainGame : ApplicationAdapter() {
         // input handler
         inputHandler = InputHandler(endlessMode)
         Gdx.input.inputProcessor = GestureDetector(inputHandler)
-        // load persistent high score from shared preferences
+        // load persistent preferences from shared preferences
         preferences = Gdx.app.getPreferences("ColorSortPreferences")
         endlessMode.setHighScore(preferences.getInteger("highscore", 0))
+        endlessMode.soundOfOrOn(preferences.getBoolean("sound", true))
+        endlessMode.musicOfOrOn(preferences.getBoolean("music", true))
+        endlessMode.setInteractionMethod(InteractionMethod.fromInt(
+            preferences.getInteger("interactionMethod", 1))?: InteractionMethod.DIRECT)
     }
     // sizes camera to screen size
     override fun resize(width: Int, height: Int) {
@@ -97,18 +106,24 @@ class ColorSortMainGame : ApplicationAdapter() {
         }
         batch.end()
     }
-    // pause game, when app is put to pause by android
+    // pause game, when app is put to pause by android, save preferences
     override fun pause() {
+        savePreferences()
         if(endlessMode.gameState == GameState.INGAME){
             endlessMode.gameState = GameState.PAUSED
         }
     }
-    // before app gets killed save high score and dispose textures
+    // before app gets killed save preferences and dispose textures
     override fun dispose() {
-        // persistent high score
-        preferences.putInteger("highscore", endlessMode.getHighScore())
-        preferences.flush()
+        savePreferences()
         // dispose textures
         endlessMode.dispose()
+    }
+    private fun savePreferences() {
+        preferences.putInteger("highscore", endlessMode.getHighScore())
+        preferences.putBoolean("sound", endlessMode.isSoundOn())
+        preferences.putBoolean("music", endlessMode.isMusicOn())
+        preferences.putInteger("interactionMethod", endlessMode.getInteractionMethod().toInt())
+        preferences.flush()
     }
 }
