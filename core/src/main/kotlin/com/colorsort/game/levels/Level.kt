@@ -185,11 +185,11 @@ class Level(levelDef: LevelDef)  {
         // outside 75 % but inside 90% its a far tap and everything further is a very far tap
 
         // far taps
-        if (((x < 10 && x > 5) || (x > 30 && x < 35) || (y < 20 && y > 10) || (y > 60 && y < 70)) && farTaps < 999){
+        if (((x < 10 && x > 5) || (x > 30 && x < 35) || (y < 20 && y > 10) || (y > 60 && y < 70)) && farTaps < 9999){
             farTaps++
         }
         // very far taps
-        if ((x < 5 || x > 35 || y < 10 || y > 70) && veryFarTaps < 999){
+        if ((x < 5 || x > 35 || y < 10 || y > 70) && veryFarTaps < 9999){
             veryFarTaps++
         }
     }
