@@ -122,6 +122,15 @@ class Level(levelDef: LevelDef)  {
         if (gameState == GameState.INGAME){
             // step the world
             doStep()
+            // work around to solve problem with balls sticking to walls
+            for (ball in ballsList){
+                if (ball.getBody()!!.position.x >= 37.5){
+                    ball.getBody()!!.applyForceToCenter(-0.6f, 0f, true)
+                }
+                if (ball.getBody()!!.position.x <= 2.5){
+                    ball.getBody()!!.applyForceToCenter(0.6f, 0f, true)
+                }
+            }
         }
         // collect updated positions
         val textureDrawHelpers : ArrayList<TextureDrawHelper> = ArrayList()
