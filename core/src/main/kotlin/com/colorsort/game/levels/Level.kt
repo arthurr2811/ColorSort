@@ -21,6 +21,8 @@ import com.colorsort.game.helpers.TextDrawHelper
 import com.colorsort.game.helpers.TextureDrawHelper
 import com.colorsort.game.screens.GameState
 import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 /*
 a level defined by given level definition. The idea is to set up everything in a levelDef. A level
@@ -61,6 +63,8 @@ class Level(levelDef: LevelDef)  {
     private var highScore = 0
     private var farTaps = 0
     private var veryFarTaps = 0
+    private var roundsPlayed = 0
+    private var totalScore = 0
     // world dimensions
     val worldWidth = levelDef.worldWidth
     val worldHeight = levelDef.worldHeight
@@ -111,6 +115,8 @@ class Level(levelDef: LevelDef)  {
             texts.add(TextDrawHelper("Tap Statistics:", Vector2(worldWidth/2, 24f), Color.BLACK, 4f))
             texts.add(TextDrawHelper("Far Taps: $farTaps, Very Far Taps: $veryFarTaps",
                 Vector2(worldWidth/2, 21f), Color.BLACK, 4f))
+            texts.add(TextDrawHelper("Rounds: $roundsPlayed, Average Score: ${getAverageScore()}",
+                Vector2(worldWidth/2, 18f), Color.BLACK, 4f))
         }
         return texts
     }
@@ -347,6 +353,8 @@ class Level(levelDef: LevelDef)  {
         lastSpawnTime = TimeUtils.nanoTime()
         ballsToRemoveList.addAll(ballsList)
         gameState = GameState.GAMEOVER
+        roundsPlayed++
+        totalScore += score
         if (score > highScore){
             // safe new high score
             highScore = score
@@ -361,6 +369,8 @@ class Level(levelDef: LevelDef)  {
     fun resetTapStatistics() {
         farTaps = 0
         veryFarTaps = 0
+        totalScore = 0
+        roundsPlayed = 0
     }
     fun increaseScore (amount : Int){
         score += amount
@@ -369,6 +379,14 @@ class Level(levelDef: LevelDef)  {
             spawner.spawnInterval *= 0.8f
         }
     }
+    private fun getAverageScore(): Float {
+        if (roundsPlayed == 0) {
+            return 0.0f }
+        return (totalScore.toFloat() / roundsPlayed).round(1)
+    }
+    private fun Float.round(decimals: Int): Float {
+        val factor = 10.0.pow(decimals).toFloat()
+        return (this * factor).roundToInt() / factor }
     fun resetScore() {
         score = 0
     }
